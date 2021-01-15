@@ -1,0 +1,57 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://assets/player.png" type="Texture" id=1]
+[ext_resource path="res://src/actors/Player.cs" type="Script" id=2]
+
+[sub_resource type="OccluderPolygon2D" id=1]
+polygon = PoolVector2Array( -30, -48, 31, -48, 39, -45, 45, -39, 48, -33, 49, 32, 45, 40, 39, 45, 36, 46, 27, 47, -34, 48, -42, 45, -48, 37, -49, 30, -49, -32, -46, -41, -35, -48 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 39, 42 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 46, 39 )
+
+[node name="Player" type="KinematicBody2D"]
+collision_mask = 8
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="player" type="Sprite" parent="."]
+position = Vector2( 0, -48 )
+texture = ExtResource( 1 )
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="player"]
+occluder = SubResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -42 )
+shape = SubResource( 2 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 0, -294 )
+current = true
+limit_left = 0
+limit_top = 0
+limit_bottom = 1200
+limit_smoothed = true
+drag_margin_h_enabled = true
+drag_margin_v_enabled = true
+smoothing_enabled = true
+drag_margin_left = 0.0
+drag_margin_right = 0.0
+
+[node name="EnemyDetector" type="Area2D" parent="."]
+position = Vector2( 0, 3 )
+monitorable = false
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyDetector"]
+modulate = Color( 0.129412, 0.121569, 0.980392, 1 )
+position = Vector2( 0, -42 )
+shape = SubResource( 3 )
+[connection signal="area_entered" from="EnemyDetector" to="." method="_on_EnemyDetector_area_entered"]
+[connection signal="body_entered" from="EnemyDetector" to="." method="_on_EnemyDetector_body_entered"]

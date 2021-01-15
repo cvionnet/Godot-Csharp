@@ -8,7 +8,7 @@
 
 ## Projects
 
-* ✅ A First 2D plateformer ([Course](https://gdquest.mavenseed.com/courses/create-your-first-2d-game-with-godot-extended-edition))
+* ✅ A First 2D platformer ([Course](https://gdquest.mavenseed.com/courses/create-your-first-2d-game-with-godot-extended-edition))
 * 💻 Code a 2D Platform Game Character ([Course](https://gdquest.mavenseed.com/courses/code-a-professional-platform-game-character-with-godot))
 
 * [TBD] VFX Secrets: Design 2D Visual Effects ([Course](https://gdquest.mavenseed.com/courses/godot-vfx-secrets))
