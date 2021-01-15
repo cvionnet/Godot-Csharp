@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "gGlnorRRu8cP7xkb/7PckGRrrKmMP5YmYjFX227FLi4z+nkaggPIil/TeOCkRyuutwNz/qCTrmW/1qEseeWXAQ==",
+  "dgSpecHash": "GydiVgfd2CdFj91SzQ98K1PBhrpran2Au+XwuIUNPcNoP04GSFov7Q3riTQzSq+dcXq9vyy2lNsUl7yzaIASbw==",
   "success": true,
-  "projectFilePath": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Tutos\\GDQuest\\01-2D platformer\\01-2D platformer.csproj",
+  "projectFilePath": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Github\\Godot-Csharp\\GDQuest\\01-First 2D platformer\\01-First 2D platformer.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Tutos\\GDQuest\\01-2D platformer\\01-2D platformer.csproj",
-      "projectName": "01-2D platformer",
-      "projectPath": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Tutos\\GDQuest\\01-2D platformer\\01-2D platformer.csproj",
+      "projectUniqueName": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Github\\Godot-Csharp\\GDQuest\\01-First 2D platformer\\01-First 2D platformer.csproj",
+      "projectName": "01-First 2D platformer",
+      "projectPath": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Github\\Godot-Csharp\\GDQuest\\01-First 2D platformer\\01-First 2D platformer.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Tutos\\GDQuest\\01-2D platformer\\.mono\\temp\\obj\\",
+      "outputPath": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Github\\Godot-Csharp\\GDQuest\\01-First 2D platformer\\.mono\\temp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\"
