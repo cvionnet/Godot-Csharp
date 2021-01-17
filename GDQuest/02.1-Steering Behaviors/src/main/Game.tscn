@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://src/objects/Circle.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/graph-paper.svg" type="Texture" id=2]
 [ext_resource path="res://src/agents/CharacterFollow.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/objects/Target.tscn" type="PackedScene" id=4]
 
 [node name="Node2D" type="Node2D"]
 
@@ -40,3 +41,6 @@ scale = Vector2( 2, 2 )
 texture = ExtResource( 2 )
 region_enabled = true
 region_rect = Rect2( -121.5, -55.25, 828, 513 )
+
+[node name="Target" parent="." instance=ExtResource( 4 )]
+position = Vector2( 228, 166 )
