@@ -10,7 +10,6 @@ public static class Utils
     public const float STEERING_DEFAULT_MAX_SPEED = 400.0f;
     public const float STEERING_DISTANCE_DESACTIVATE = 3.0f;  // to stop the character to move if he is closed to the target (or it will have a kind of Parkinson movement)
 
-
     public static Vector2 VECTOR_0 = new Vector2(0.0f,0.0f);          // (=Vector2.ZERO in GDScript)
     public static Vector2 VECTOR_1 = new Vector2(1.0f,1.0f);
     public static Vector2 VECTOR_FLOOR = new Vector2(0,-1);     // (=Vector2.UP in GDScript) Use it for plateformer
@@ -128,14 +127,15 @@ public static class Utils
 #region METHODS - AI / STEERING
 
     /// <summary>
-    /// Calculate a velocity to move a character towards a destination using steering behaviour (adjust every frame)
+    /// Calculate a velocity to move a character towards a destination (use steering behaviour to adjust every frame)
     /// </summary>
     /// <param name="pVelocity">the actual velocity of the character</param>
     /// <param name="pGlobalPosition">the actual global position of the character</param>
     /// <param name="pTargetPosition">the destination of the character</param>
-    /// <param name="pMaxSpeed"></param>
+    /// <param name="pMaxSpeed">the maximum spped the character can reach</param>
+    /// <param name="pSlowRadius">(0.0f = no slow down) the circle raduis around the target where the character starts to slow down</param>
     /// <returns>A vector2 to represent the destination velocity</returns>
-    public static Vector2 Steering_Follow(Vector2 pVelocity, Vector2 pGlobalPosition, Vector2 pTargetPosition, float pMaxSpeed = STEERING_DEFAULT_MAX_SPEED, float pMass = STEERING_DEFAULT_MASS)
+    public static Vector2 Steering_Follow(Vector2 pVelocity, Vector2 pGlobalPosition, Vector2 pTargetPosition, float pMaxSpeed = STEERING_DEFAULT_MAX_SPEED, float pSlowRadius = 0.0f, float pMass = STEERING_DEFAULT_MASS)
     {
         // Check if we have enough distance between the character and the target
         if (pGlobalPosition.DistanceTo(pTargetPosition) <= STEERING_DISTANCE_DESACTIVATE)
@@ -148,13 +148,23 @@ public static class Utils
         desire_velocity *= pMaxSpeed;
 
 
-        // Calculate the steering vector : maximum character's velocity - current velocity
-        // mass will slow down character's movement  (it shorter the velocity)
+        // Slow down the character when he is closed to the target
+        if (pSlowRadius != 0.0f)
+        {
+            float to_target = pGlobalPosition.DistanceTo(pTargetPosition);
+
+            // Reduce velocity if in the slow circle around the target
+            // 0.8f + 0.2f : used to not slow down too much the character
+            if (to_target <= pSlowRadius)
+                desire_velocity *= (to_target / pSlowRadius) * 0.8f + 0.2f;
+        }
+
+
+        // Calculate the steering vector : (maximum character's velocity - current velocity) / mass (to slow down character's movement)
         Vector2 steering = (desire_velocity - pVelocity) / pMass;
 
         return pVelocity + steering;
     }
-
 
 #endregion
 

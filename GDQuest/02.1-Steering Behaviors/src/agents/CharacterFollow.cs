@@ -6,6 +6,7 @@ public class CharacterFollow : KinematicBody2D
 #region HEADER
 
     [Export] public float MaxSpeed = 500.0f;
+    [Export] public float SlowRadius = 200.0f;
 
     //[Signal] public delegate void MySignal(bool value1, int value2);
 
@@ -30,7 +31,8 @@ public class CharacterFollow : KinematicBody2D
         Vector2 target_global_position = GetGlobalMousePosition();
 
         // Calculate velocity between the character and the target (cursor), then move the character
-        _velocity = Utils.Steering_Follow(_velocity, GlobalPosition, target_global_position, MaxSpeed);
+//        _velocity = Utils.Steering_Follow(_velocity, GlobalPosition, target_global_position, MaxSpeed);
+        _velocity = Utils.Steering_Follow(_velocity, GlobalPosition, target_global_position, MaxSpeed, SlowRadius);
         _velocity = MoveAndSlide(_velocity);
 
         // Point the character direction towards the destination
