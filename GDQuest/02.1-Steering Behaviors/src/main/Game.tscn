@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/objects/Circle.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/graph-paper.svg" type="Texture" id=2]
 [ext_resource path="res://src/ai/agents/Follower.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/objects/Target.tscn" type="PackedScene" id=4]
 [ext_resource path="res://src/ai/agents/Leader.tscn" type="PackedScene" id=5]
+[ext_resource path="res://src/ai/agents/Runner.tscn" type="PackedScene" id=6]
 
 [node name="Node2D" type="Node2D"]
 
@@ -17,15 +18,24 @@ LeaderToFollow = true
 
 [node name="CharFollowing1" parent="." instance=ExtResource( 3 )]
 position = Vector2( 405, 304 )
-NodeToFollow = NodePath("../Leader")
 
 [node name="CharFollowing2" parent="." instance=ExtResource( 3 )]
 position = Vector2( 298, 267 )
-NodeToFollow = NodePath("../CharFollowing1")
 
 [node name="CharFollowing3" parent="." instance=ExtResource( 3 )]
 position = Vector2( 378, 212 )
-NodeToFollow = NodePath("../CharFollowing2")
+
+[node name="CharacterRun" parent="." instance=ExtResource( 6 )]
+position = Vector2( 932, 143 )
+IsRunner = true
+
+[node name="CharacterRun2" parent="." instance=ExtResource( 6 )]
+position = Vector2( 975, 212 )
+IsRunner = true
+
+[node name="CharacterRun3" parent="." instance=ExtResource( 6 )]
+position = Vector2( 905, 250 )
+IsRunner = true
 
 [node name="Circle" parent="." instance=ExtResource( 1 )]
 position = Vector2( 298, 367 )

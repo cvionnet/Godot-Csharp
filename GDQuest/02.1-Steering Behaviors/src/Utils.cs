@@ -125,8 +125,9 @@ public static class Utils
     public const float STEERING_DEFAULT_MASS = 2.0f;
     public const float STEERING_DEFAULT_MAX_SPEED = 400.0f;
     public const float STEERING_DISTANCE_DESACTIVATE = 3.0f;  // to stop the character to move if he is closed to the target (or it will have a kind of Parkinson movement)
+    public const float STEERING_DEFAULT_FLEE = 200.0f;      // to run away
 
-    public static Node2D TargetToFollow;    // to save the master node to follow
+    public static Node2D LeaderToFollow;    // to save the leader node to follow
 
     /// <summary>
     /// Calculate a velocity to move a character towards a destination (use steering behaviour to adjust every frame)
@@ -134,8 +135,8 @@ public static class Utils
     /// <param name="pVelocity">the actual velocity of the character</param>
     /// <param name="pGlobalPosition">the actual global position of the character</param>
     /// <param name="pTargetPosition">the destination of the character</param>
-    /// <param name="pMaxSpeed">the maximum spped the character can reach</param>
-    /// <param name="pSlowRadius">(0.0f = no slow down) the circle raduis around the target where the character starts to slow down</param>
+    /// <param name="pMaxSpeed">the maximum speed the character can reach</param>
+    /// <param name="pSlowRadius">(0.0f = no slow down) the circle radius around the target where the character starts to slow down</param>
     /// <returns>A vector2 to represent the destination velocity or a Vector2(0,0) if there is not enough distance between the character and the target</returns>
     public static Vector2 Steering_Follow(Vector2 pVelocity, Vector2 pGlobalPosition, Vector2 pTargetPosition, float pMaxSpeed = STEERING_DEFAULT_MAX_SPEED, float pSlowRadius = 0.0f, float pMass = STEERING_DEFAULT_MASS)
     {
@@ -146,7 +147,6 @@ public static class Utils
 
         // Calculate the maximum velocity the character can move towards the target
         // Get a velocity vector between the target and the character position ...
-//        Vector2 desire_velocity = (pTargetPosition - pGlobalPosition).Normalized();
         Vector2 desire_velocity = (pTargetPosition - pGlobalPosition).Normalized();
         // ... moving as fast as he can
         desire_velocity *= pMaxSpeed;
@@ -171,10 +171,29 @@ public static class Utils
     }
 
     /// <summary>
+    /// Calculate a velocity to flee from a destination
+    /// </summary>
+    /// <param name="pGlobalPosition">the actual global position of the character</param>
+    /// <param name="pTargetPosition">the destination of the character</param>
+    /// <param name="pFleeRadius">the circle radius where the character starts to flee</param>
+    /// <returns>A vector2 to represent the destination velocity</returns>
+    public static Vector2 Steering_CalculateFlee(Vector2 pGlobalPosition, Vector2 pTargetPosition, float pFleeRadius = STEERING_DEFAULT_FLEE)
+    {
+        // If the target is outside the radius, do nothing
+        if (pGlobalPosition.DistanceTo(pTargetPosition) > pFleeRadius)
+            return pGlobalPosition;
+
+        Vector2 flee_global_position = pTargetPosition - (pTargetPosition - pGlobalPosition).Normalized();
+	    Vector2 target_position = pGlobalPosition + (pGlobalPosition - flee_global_position).Normalized() * pFleeRadius;
+
+        return target_position;
+    }
+
+    /// <summary>
     /// Calculate the velocity to keep distance behind the leader
     /// </summary>
     /// <param name="pLeaderPosition">the position of the node to follow</param>
-    /// <param name="pTargetPosition">the position of the follower</param>
+    /// <param name="pFollowerPosition">the position of the follower</param>
     /// <param name="pFollowOffset">the distance to keep between the leader and follower node</param>
     /// <returns>A vector2 to represent the position to follow with the distance to keep</returns>
     public static Vector2 Steering_CalculateDistanceBetweenFollowers(Vector2 pLeaderPosition, Vector2 pFollowerPosition, float pFollowOffset)
