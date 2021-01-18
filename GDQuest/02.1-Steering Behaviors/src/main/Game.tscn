@@ -2,31 +2,30 @@
 
 [ext_resource path="res://src/objects/Circle.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/graph-paper.svg" type="Texture" id=2]
-[ext_resource path="res://src/agents/CharacterFollow.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/ai/agents/Follower.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/objects/Target.tscn" type="PackedScene" id=4]
-[ext_resource path="res://src/agents/Player.tscn" type="PackedScene" id=5]
+[ext_resource path="res://src/ai/agents/Leader.tscn" type="PackedScene" id=5]
 
 [node name="Node2D" type="Node2D"]
 
 [node name="Target" parent="." instance=ExtResource( 4 )]
 position = Vector2( 228, 166 )
 
-[node name="Player" parent="." instance=ExtResource( 5 )]
-position = Vector2( 826, 90 )
+[node name="Leader" parent="." instance=ExtResource( 5 )]
+position = Vector2( 646, 250 )
+LeaderToFollow = true
 
 [node name="CharFollowing1" parent="." instance=ExtResource( 3 )]
 position = Vector2( 405, 304 )
-Mass = 3.0
+NodeToFollow = NodePath("../Leader")
 
 [node name="CharFollowing2" parent="." instance=ExtResource( 3 )]
 position = Vector2( 298, 267 )
-MaxSpeed = 480.0
+NodeToFollow = NodePath("../CharFollowing1")
 
 [node name="CharFollowing3" parent="." instance=ExtResource( 3 )]
 position = Vector2( 378, 212 )
-MaxSpeed = 550.0
-Mass = 2.5
-NodeTofollow = NodePath("../CharFollowing2")
+NodeToFollow = NodePath("../CharFollowing2")
 
 [node name="Circle" parent="." instance=ExtResource( 1 )]
 position = Vector2( 298, 367 )
@@ -44,9 +43,9 @@ motion_scale = Vector2( 0.9, 0.9 )
 
 [node name="ColorRect" type="ColorRect" parent="ParallaxBackground/ParallaxLayer"]
 margin_left = -494.0
-margin_top = -373.0
+margin_top = -375.0
 margin_right = 1587.0
-margin_bottom = 1068.0
+margin_bottom = 1066.0
 mouse_filter = 2
 color = Color( 0.113725, 0.27451, 0.52549, 1 )
 __meta__ = {

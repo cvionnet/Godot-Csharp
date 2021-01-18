@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class CharacterFollow : KinematicBody2D
+public class Follower : KinematicBody2D
 {
 #region HEADER
 
@@ -11,15 +11,15 @@ public class CharacterFollow : KinematicBody2D
     [Export] public float Follow_Offset = 100.0f;        // to add an offset (=distance) between following nodes
 
     //** 2 options of following
-    //      OPTION 1 : check "MasterTofollow" for a node in the Editor. All other nodes will follow the master, keeping "Follow_Offset" distance
-    //      OPTION 2 : select a "NodeTofollow" for a node in the Editor. This node will only follow this node, keeping "Follow_Offset" distance (this creates a queue of nodes)
-    [Export] public bool MasterTofollow;        // set the Node as the master
-    [Export] public NodePath NodeTofollow;      // set the Node to follow
+    //      OPTION 1 : check "LeaderToFollow" for a node in the Editor. All other nodes will follow the leader, keeping "Follow_Offset" distance
+    //      OPTION 2 : select a "NodeToFollow" for a node in the Editor. This node will only follow the selected node, keeping "Follow_Offset" distance (this creates a queue of nodes)
+    [Export] public bool LeaderToFollow;        // set the Node as the leader
+    [Export] public NodePath NodeToFollow;      // set the Node to follow
 
     private Sprite _sprite;
     private Vector2 _velocity = Utils.VECTOR_0;
     private Vector2 _target_global_position = Utils.VECTOR_0;
-    private KinematicBody2D _nodeToFollow;
+    private Node2D _nodeToFollow;
 
 #endregion
 
@@ -32,13 +32,7 @@ public class CharacterFollow : KinematicBody2D
     {
         _sprite = GetNode<Sprite>("TriangleRed");
 
-        // Set the master node (the one to follow)
-        if (MasterTofollow)
-            Utils.TargetToFollow = this;
-
-        // 
-        if (NodeTofollow != null)
-            _nodeToFollow = GetNode<KinematicBody2D>(NodeTofollow);
+        _Init_FollowMode();
 
         SetPhysicsProcess(false);       // disable call to _PhysicsProcess until the player click anywhere
     }
@@ -46,10 +40,10 @@ public class CharacterFollow : KinematicBody2D
     public override void _PhysicsProcess(float delta)
     {
         // Make the target (the cross) following the mouse cursor when click and drag
-        if (MasterTofollow && Input.IsActionPressed("click"))
+        if (LeaderToFollow && Input.IsActionPressed("click"))
             _GetDestination();
         // For followers nodes, recalculate the destination every frame
-        else if (MasterTofollow == false)
+        else if (LeaderToFollow == false)
             _GetDestination();
 
         _MoveCharacter();
@@ -77,22 +71,36 @@ public class CharacterFollow : KinematicBody2D
 #region USER METHODS
 
     /// <summary>
+    /// Set the leader or dedicated node
+    /// </summary>
+    private void _Init_FollowMode()
+    {
+        // Set the leader node (the one to follow)
+        if (LeaderToFollow)
+            Utils.TargetToFollow = this;
+
+        // If a dedicated node to follow has been set
+        if (NodeToFollow != null)
+            _nodeToFollow = GetNode<Node2D>(NodeToFollow);
+    }
+
+    /// <summary>
     /// Get the target's position where the character will move
     /// </summary>
     private void _GetDestination()
     {
-        // The master node gets the mouse cursor position
-        if (MasterTofollow)
+        // The leader node gets the mouse cursor position
+        if (LeaderToFollow)
         {
             _target_global_position = GetGlobalMousePosition();
         }
-        // If this node follow another node, gets the node to follow position and keep the distance
+        // If this node follow another node, gets the node to follow position and calculate the distance to keep
         else if (_nodeToFollow != null)
         {
             _target_global_position = _nodeToFollow.GlobalPosition;
             _target_global_position = Utils.Steering_CalculateDistanceBetweenFollowers(_target_global_position, GlobalPosition, Follow_Offset);
         }
-        // Else gets the master position and keep the distance
+        // Else gets the leader position and calculate the distance to keep
         else
         {
             _target_global_position = Utils.TargetToFollow.GlobalPosition;
@@ -117,7 +125,7 @@ public class CharacterFollow : KinematicBody2D
             _velocity = MoveAndSlide(_velocity);
             _sprite.Rotation = _velocity.Angle();   // point the character direction towards the destination
         }
-    }
+   }
 
 #endregion
 }

@@ -146,6 +146,7 @@ public static class Utils
 
         // Calculate the maximum velocity the character can move towards the target
         // Get a velocity vector between the target and the character position ...
+//        Vector2 desire_velocity = (pTargetPosition - pGlobalPosition).Normalized();
         Vector2 desire_velocity = (pTargetPosition - pGlobalPosition).Normalized();
         // ... moving as fast as he can
         desire_velocity *= pMaxSpeed;
@@ -170,20 +171,20 @@ public static class Utils
     }
 
     /// <summary>
-    /// Calculate the velocity to keep distance behind the master
+    /// Calculate the velocity to keep distance behind the leader
     /// </summary>
-    /// <param name="pMasterPosition">the position of the node to follow</param>
+    /// <param name="pLeaderPosition">the position of the node to follow</param>
     /// <param name="pTargetPosition">the position of the follower</param>
-    /// <param name="pFollowOffset">the distance to keep between the master and follower node</param>
+    /// <param name="pFollowOffset">the distance to keep between the leader and follower node</param>
     /// <returns>A vector2 to represent the position to follow with the distance to keep</returns>
-    public static Vector2 Steering_CalculateDistanceBetweenFollowers(Vector2 pMasterPosition, Vector2 pFollowerPosition, float pFollowOffset)
+    public static Vector2 Steering_CalculateDistanceBetweenFollowers(Vector2 pLeaderPosition, Vector2 pFollowerPosition, float pFollowOffset)
     {
-        // To get the direction behind the master
-        Vector2 direction = (pFollowerPosition - pMasterPosition).Normalized();
+        // Get the vector direction to the leader (behind the leader)
+        Vector2 direction = (pFollowerPosition - pLeaderPosition).Normalized();
         Vector2 velocity = pFollowerPosition - (direction * pFollowOffset);
 
-        // To avoid the follower to be too close to the master (or it will have a kind of Parkinson movement)
-        if (pMasterPosition.DistanceTo(pFollowerPosition) <= pFollowOffset)
+        // To avoid the follower to be too close to the leader (or it will have a kind of Parkinson movement)
+        if (pLeaderPosition.DistanceTo(pFollowerPosition) <= pFollowOffset)
             velocity = pFollowerPosition;
 
         return velocity;
