@@ -49,7 +49,7 @@ public class Target : Area2D
 
     public override void _PhysicsProcess(float delta)
     {
-        // Make the target to follow the mouse cursor when click
+        // Make the target to follow the mouse cursor when click and drag
         if (Input.IsActionPressed("click"))
             GlobalPosition = GetGlobalMousePosition();
     }
@@ -62,7 +62,7 @@ public class Target : Area2D
     // Note : it's cleaner to define key in the Input Manager and use  Input.IsActionPressed("myaction")   in  _Process
     public override void _UnhandledInput(InputEvent @event)
     {
-        if (@event.IsActionReleased("click"))
+        if (@event.IsActionPressed("click"))
             _animationPlayer.Play("fadein");
     }
 

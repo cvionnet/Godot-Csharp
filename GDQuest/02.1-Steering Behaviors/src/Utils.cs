@@ -134,7 +134,7 @@ public static class Utils
     /// <param name="pTargetPosition">the destination of the character</param>
     /// <param name="pMaxSpeed">the maximum spped the character can reach</param>
     /// <param name="pSlowRadius">(0.0f = no slow down) the circle raduis around the target where the character starts to slow down</param>
-    /// <returns>A vector2 to represent the destination velocity</returns>
+    /// <returns>A vector2 to represent the destination velocity or a Vector2(0,0) if there is not enough distance between the character and the target</returns>
     public static Vector2 Steering_Follow(Vector2 pVelocity, Vector2 pGlobalPosition, Vector2 pTargetPosition, float pMaxSpeed = STEERING_DEFAULT_MAX_SPEED, float pSlowRadius = 0.0f, float pMass = STEERING_DEFAULT_MASS)
     {
         // Check if we have enough distance between the character and the target
