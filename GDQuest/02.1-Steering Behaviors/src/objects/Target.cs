@@ -49,7 +49,7 @@ public class Target : Area2D
 
     public override void _PhysicsProcess(float delta)
     {
-        // Make the target to follow the mouse cursor when click and drag
+        // Make the target following the mouse cursor when click and drag
         if (Input.IsActionPressed("click"))
             GlobalPosition = GetGlobalMousePosition();
     }

@@ -6,15 +6,12 @@ using Godot;
 public static class Utils
 {
 #region VARIABLES
-    public const float STEERING_DEFAULT_MASS = 2.0f;
-    public const float STEERING_DEFAULT_MAX_SPEED = 400.0f;
-    public const float STEERING_DISTANCE_DESACTIVATE = 3.0f;  // to stop the character to move if he is closed to the target (or it will have a kind of Parkinson movement)
 
     public static Vector2 VECTOR_0 = new Vector2(0.0f,0.0f);          // (=Vector2.ZERO in GDScript)
     public static Vector2 VECTOR_1 = new Vector2(1.0f,1.0f);
     public static Vector2 VECTOR_FLOOR = new Vector2(0,-1);     // (=Vector2.UP in GDScript) Use it for plateformer
 
-//    public static StateMachine StateMachine_Node { get; set; }
+    public static StateMachine StateMachine_Node { get; set; }
 
 #endregion
 
@@ -125,6 +122,11 @@ public static class Utils
 #endregion
 
 #region METHODS - AI / STEERING
+    public const float STEERING_DEFAULT_MASS = 2.0f;
+    public const float STEERING_DEFAULT_MAX_SPEED = 400.0f;
+    public const float STEERING_DISTANCE_DESACTIVATE = 3.0f;  // to stop the character to move if he is closed to the target (or it will have a kind of Parkinson movement)
+
+    public static Node2D TargetToFollow;    // to save the master node to follow
 
     /// <summary>
     /// Calculate a velocity to move a character towards a destination (use steering behaviour to adjust every frame)
@@ -141,6 +143,7 @@ public static class Utils
         if (pGlobalPosition.DistanceTo(pTargetPosition) <= STEERING_DISTANCE_DESACTIVATE)
             return VECTOR_0;
 
+
         // Calculate the maximum velocity the character can move towards the target
         // Get a velocity vector between the target and the character position ...
         Vector2 desire_velocity = (pTargetPosition - pGlobalPosition).Normalized();
@@ -156,7 +159,7 @@ public static class Utils
             // Reduce velocity if in the slow circle around the target
             // 0.8f + 0.2f : used to not slow down too much the character
             if (to_target <= pSlowRadius)
-                desire_velocity *= (to_target / pSlowRadius) * 0.8f + 0.2f;
+                desire_velocity *= ((to_target / pSlowRadius) * 0.8f) + 0.2f;
         }
 
 
@@ -164,6 +167,26 @@ public static class Utils
         Vector2 steering = (desire_velocity - pVelocity) / pMass;
 
         return pVelocity + steering;
+    }
+
+    /// <summary>
+    /// Calculate the velocity to keep distance behind the master
+    /// </summary>
+    /// <param name="pMasterPosition">the position of the node to follow</param>
+    /// <param name="pTargetPosition">the position of the follower</param>
+    /// <param name="pFollowOffset">the distance to keep between the master and follower node</param>
+    /// <returns>A vector2 to represent the position to follow with the distance to keep</returns>
+    public static Vector2 Steering_CalculateDistanceBetweenFollowers(Vector2 pMasterPosition, Vector2 pFollowerPosition, float pFollowOffset)
+    {
+        // To get the direction behind the master
+        Vector2 direction = (pFollowerPosition - pMasterPosition).Normalized();
+        Vector2 velocity = pFollowerPosition - (direction * pFollowOffset);
+
+        // To avoid the follower to be too close to the master (or it will have a kind of Parkinson movement)
+        if (pMasterPosition.DistanceTo(pFollowerPosition) <= pFollowOffset)
+            velocity = pFollowerPosition;
+
+        return velocity;
     }
 
 #endregion
