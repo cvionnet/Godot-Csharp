@@ -123,39 +123,36 @@ public static class Utils
 
 #region METHODS - AI / STEERING
     public const float STEERING_DEFAULT_MASS = 2.0f;
-    public const float STEERING_DEFAULT_MAX_SPEED = 400.0f;
-    public const float STEERING_DISTANCE_DESACTIVATE = 3.0f;  // to stop the character to move if he is closed to the target (or it will have a kind of Parkinson movement)
+    public const float STEERING_DEFAULT_MAXSPEED = 400.0f;
+    public const float STEERING_CLOSE_DISTANCE = 3.0f;      // to stop the character to move if he is closed to the target (or it will have a kind of Parkinson movement)
     public const float STEERING_DEFAULT_FLEE = 200.0f;      // to run away
 
     public static Node2D LeaderToFollow;    // to save the leader node to follow
 
     /// <summary>
-    /// Calculate a velocity to move a character towards a destination (use steering behaviour to adjust every frame)
+    /// Calculate a velocity to move a character towards a destination (Follow)
     /// </summary>
     /// <param name="pVelocity">the actual velocity of the character</param>
-    /// <param name="pGlobalPosition">the actual global position of the character</param>
+    /// <param name="pPosition">the actual global position of the character</param>
     /// <param name="pTargetPosition">the destination of the character</param>
     /// <param name="pMaxSpeed">the maximum speed the character can reach</param>
     /// <param name="pSlowRadius">(0.0f = no slow down) the circle radius around the target where the character starts to slow down</param>
-    /// <returns>A vector2 to represent the destination velocity or a Vector2(0,0) if there is not enough distance between the character and the target</returns>
-    public static Vector2 Steering_Follow(Vector2 pVelocity, Vector2 pGlobalPosition, Vector2 pTargetPosition, float pMaxSpeed = STEERING_DEFAULT_MAX_SPEED, float pSlowRadius = 0.0f, float pMass = STEERING_DEFAULT_MASS)
+    /// <param name="pMass">to slow down the character</param>
+    /// <returns>A vector2 to represent the destination velocity or a Vector2(0,0) if character is close to the target</returns>
+    public static Vector2 Steering_Seek(Vector2 pVelocity, Vector2 pPosition, Vector2 pTargetPosition,
+                                        float pMaxSpeed = STEERING_DEFAULT_MAXSPEED, float pSlowRadius = 0.0f, float pMass = STEERING_DEFAULT_MASS)
     {
         // Check if we have enough distance between the character and the target
-        if (pGlobalPosition.DistanceTo(pTargetPosition) <= STEERING_DISTANCE_DESACTIVATE)
+        if (pPosition.DistanceTo(pTargetPosition) <= STEERING_CLOSE_DISTANCE)
             return VECTOR_0;
 
+        // STEP 1 : use the formula to get the shortest path possible to the target
+        Vector2 desire_velocity = (pTargetPosition - pPosition).Normalized() * pMaxSpeed;
 
-        // Calculate the maximum velocity the character can move towards the target
-        // Get a velocity vector between the target and the character position ...
-        Vector2 desire_velocity = (pTargetPosition - pGlobalPosition).Normalized();
-        // ... moving as fast as he can
-        desire_velocity *= pMaxSpeed;
-
-
-        // Slow down the character when he is closed to the target
+        // STEP 2 : slow down the character when he is closed to the target
         if (pSlowRadius != 0.0f)
         {
-            float to_target = pGlobalPosition.DistanceTo(pTargetPosition);
+            float to_target = pPosition.DistanceTo(pTargetPosition);
 
             // Reduce velocity if in the slow circle around the target
             // 0.8f + 0.2f : used to not slow down too much the character
@@ -163,31 +160,70 @@ public static class Utils
                 desire_velocity *= ((to_target / pSlowRadius) * 0.8f) + 0.2f;
         }
 
-
-        // Calculate the steering vector : (maximum character's velocity - current velocity) / mass (to slow down character's movement)
-        Vector2 steering = (desire_velocity - pVelocity) / pMass;
-
-        return pVelocity + steering;
+        // STEP 3 : apply the steering formula (use mass to slow down character's movement)
+        return _CalculateSteering(desire_velocity, pVelocity, pMass);
     }
 
     /// <summary>
+    /// Calculate a velocity to move a character away from a destination (Run away)
+    /// </summary>
+    /// <param name="pVelocity">the actual velocity of the character</param>
+    /// <param name="pPosition">the actual global position of the character</param>
+    /// <param name="pTargetPosition">the destination of the character</param>
+    /// <param name="pMaxSpeed">the maximum speed the character can reach</param>
+    /// <param name="pFleeRadius">the circle radius where the character stop to flee</param>
+    /// <param name="pMass">to slow down the character</param>
+    /// <returns>A vector2 to represent the destination velocity or a Vector2(0,0) if character is away to the target</returns>
+    public static Vector2 Steering_Flee(Vector2 pVelocity, Vector2 pPosition, Vector2 pTargetPosition,
+                                        float pMaxSpeed = STEERING_DEFAULT_MAXSPEED, float pFleeRadius = STEERING_DEFAULT_FLEE, float pMass = STEERING_DEFAULT_MASS)
+    {
+        // If the target is outside the radius, do nothing
+        if (pPosition.DistanceTo(pTargetPosition) >= pFleeRadius)
+            return VECTOR_0;
+
+        // STEP 1 : use the formula to get the shortest path possible to run away from the target
+        Vector2 desire_velocity = (pPosition - pTargetPosition).Normalized() * pMaxSpeed;
+
+        // STEP 3 : apply the steering formula (use mass to slow down character's movement)
+        return _CalculateSteering(desire_velocity, pVelocity, pMass);
+    }
+
+    /// <summary>
+    /// Calculate the steering
+    /// </summary>
+    /// <param name="pDesiredVelocity">Calculated from the Steering Behaviour formula (seek, flee ...)</param>
+    /// <param name="pVelocity">the actual velocity of the character</param>
+    /// <param name="pMass">to slow down the character</param>
+    /// <returns>A vector2 to represent the steering velocity</returns>
+    private static Vector2 _CalculateSteering(Vector2 pDesiredVelocity,Vector2 pVelocity, float pMass)
+    {
+        Vector2 steering = (pDesiredVelocity - pVelocity) / pMass;
+        return pVelocity + steering;
+    }
+
+
+    /* OLD - METHOD FROM GDSCRIPT
+
+    /// /// <summary>
     /// Calculate a velocity to flee from a destination
     /// </summary>
-    /// <param name="pGlobalPosition">the actual global position of the character</param>
+    /// <param name="pPosition">the actual global position of the character</param>
     /// <param name="pTargetPosition">the destination of the character</param>
     /// <param name="pFleeRadius">the circle radius where the character starts to flee</param>
     /// <returns>A vector2 to represent the destination velocity</returns>
-    public static Vector2 Steering_CalculateFlee(Vector2 pGlobalPosition, Vector2 pTargetPosition, float pFleeRadius = STEERING_DEFAULT_FLEE)
+    public static Vector2 Steering_CalculateFlee(Vector2 pPosition, Vector2 pTargetPosition, float pFleeRadius = STEERING_DEFAULT_FLEE)
     {
         // If the target is outside the radius, do nothing
-        if (pGlobalPosition.DistanceTo(pTargetPosition) > pFleeRadius)
-            return pGlobalPosition;
+        if (pPosition.DistanceTo(pTargetPosition) > pFleeRadius)
+            return pPosition;
 
-        Vector2 flee_global_position = pTargetPosition - (pTargetPosition - pGlobalPosition).Normalized();
-	    Vector2 target_position = pGlobalPosition + (pGlobalPosition - flee_global_position).Normalized() * pFleeRadius;
+        Vector2 flee_global_position = pTargetPosition - (pTargetPosition - pPosition).Normalized();
+	    Vector2 target_position = pPosition + (pPosition - flee_global_position).Normalized() * pFleeRadius;
 
         return target_position;
     }
+
+    */
 
     /// <summary>
     /// Calculate the velocity to keep distance behind the leader

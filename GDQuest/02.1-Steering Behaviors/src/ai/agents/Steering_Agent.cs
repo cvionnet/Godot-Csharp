@@ -20,7 +20,7 @@ public class Steering_Agent : KinematicBody2D
 
     private Sprite _sprite;
     private Vector2 _velocity = Utils.VECTOR_0;
-    private Vector2 _target_global_position = Utils.VECTOR_0;
+    private Vector2 _targetGlobalPosition = Utils.VECTOR_0;
     private Node2D _nodeToFollow;
 
     private bool _isLeader = false;
@@ -107,30 +107,29 @@ public class Steering_Agent : KinematicBody2D
         // The leader node gets the mouse cursor position
         if (_isLeader)
         {
-            _target_global_position = GetGlobalMousePosition();
+            _targetGlobalPosition = GetGlobalMousePosition();
         }
         // If this node follow another node, gets the node to follow position and keep the distance
         else if (_isFollower)   // _nodeToFollow != null)
         {
-            _target_global_position = _nodeToFollow.GlobalPosition;
-            _target_global_position = Utils.Steering_CalculateDistanceBetweenFollowers(_target_global_position, GlobalPosition, Follow_Offset);
+            _targetGlobalPosition = _nodeToFollow.GlobalPosition;
+            _targetGlobalPosition = Utils.Steering_CalculateDistanceBetweenFollowers(_targetGlobalPosition, GlobalPosition, Follow_Offset);
         }
         // Else gets the leader position and keep the distance  (except for runners)
         else if (!_isRunner)
         {
-            _target_global_position = Utils.LeaderToFollow.GlobalPosition;
-            _target_global_position = Utils.Steering_CalculateDistanceBetweenFollowers(_target_global_position, GlobalPosition, Follow_Offset);
+            _targetGlobalPosition = Utils.LeaderToFollow.GlobalPosition;
+            _targetGlobalPosition = Utils.Steering_CalculateDistanceBetweenFollowers(_targetGlobalPosition, GlobalPosition, Follow_Offset);
         }
         // Else if the node is a runner, gets the run away vector if it is closed to the leader
         else if (_isRunner)
         {
-            _target_global_position = Utils.LeaderToFollow.GlobalPosition;
-            _target_global_position = Utils.Steering_CalculateFlee(GlobalPosition, _target_global_position, FleeRadius);
+            _targetGlobalPosition = Utils.LeaderToFollow.GlobalPosition;
         // Stay at the same position
         }
         else
         {
-            _target_global_position = GlobalPosition;
+            _targetGlobalPosition = GlobalPosition;
         }
     }
 
@@ -140,13 +139,16 @@ public class Steering_Agent : KinematicBody2D
     private void _MoveCharacter()
     {
         // Perform calcul only if the node have to move
-        if (_target_global_position != GlobalPosition)
+        if (_targetGlobalPosition != GlobalPosition)
         {
-            _velocity = Utils.Steering_Follow(_velocity, GlobalPosition, _target_global_position, MaxSpeed, SlowRadius, Mass);
+            if (_isRunner)
+                _velocity = Utils.Steering_Flee(_velocity, GlobalPosition, _targetGlobalPosition, MaxSpeed, FleeRadius, Mass);
+            else
+                _velocity = Utils.Steering_Seek(_velocity, GlobalPosition, _targetGlobalPosition, MaxSpeed, SlowRadius, Mass);
 
             if (_velocity == Utils.VECTOR_0)
             {
-                SetPhysicsProcess(false);       // disable _PhysicsProcess if distance between target and character is too small
+                //SetPhysicsProcess(false);       // disable _PhysicsProcess if distance between target and character is too small
             }
             else
             {

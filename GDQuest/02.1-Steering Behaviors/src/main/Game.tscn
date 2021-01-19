@@ -30,11 +30,19 @@ position = Vector2( 932, 143 )
 IsRunner = true
 
 [node name="CharacterRun2" parent="." instance=ExtResource( 6 )]
-position = Vector2( 975, 212 )
+position = Vector2( 904, 212 )
 IsRunner = true
 
 [node name="CharacterRun3" parent="." instance=ExtResource( 6 )]
-position = Vector2( 905, 250 )
+position = Vector2( 905, 106 )
+IsRunner = true
+
+[node name="CharacterRun4" parent="." instance=ExtResource( 6 )]
+position = Vector2( 975, 106 )
+IsRunner = true
+
+[node name="CharacterRun5" parent="." instance=ExtResource( 6 )]
+position = Vector2( 975, 181 )
 IsRunner = true
 
 [node name="Circle" parent="." instance=ExtResource( 1 )]
