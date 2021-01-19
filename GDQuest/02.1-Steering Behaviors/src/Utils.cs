@@ -7,9 +7,11 @@ public static class Utils
 {
 #region VARIABLES
 
-    public static Vector2 VECTOR_0 = new Vector2(0.0f,0.0f);          // (=Vector2.ZERO in GDScript)
+    public static Vector2 VECTOR_0 = new Vector2(0.0f,0.0f);         // (=Vector2.ZERO in GDScript)
     public static Vector2 VECTOR_1 = new Vector2(1.0f,1.0f);
-    public static Vector2 VECTOR_FLOOR = new Vector2(0,-1);     // (=Vector2.UP in GDScript) Use it for plateformer
+    public static Vector2 VECTOR_FLOOR = new Vector2(0,-1);         // (=Vector2.UP in GDScript) Use it for plateformer
+
+    public static RandomNumberGenerator Rnd = new RandomNumberGenerator();
 
     public static StateMachine StateMachine_Node { get; set; }
 
@@ -155,9 +157,8 @@ public static class Utils
             float to_target = pPosition.DistanceTo(pTargetPosition);
 
             // Reduce velocity if in the slow circle around the target
-            // 0.8f + 0.2f : used to not slow down too much the character
             if (to_target <= pSlowRadius)
-                desire_velocity *= ((to_target / pSlowRadius) * 0.8f) + 0.2f;
+                desire_velocity *= ((to_target / pSlowRadius) * 0.8f) + 0.2f;       // 0.8f + 0.2f : used to not slow down too much the character
         }
 
         // STEP 3 : apply the steering formula (use mass to slow down character's movement)
@@ -181,10 +182,8 @@ public static class Utils
         if (pPosition.DistanceTo(pTargetPosition) >= pFleeRadius)
             return VECTOR_0;
 
-        // STEP 1 : use the formula to get the shortest path possible to run away from the target
+        // Use the formula to get the shortest path possible to run away from the target, then apply steering
         Vector2 desire_velocity = (pPosition - pTargetPosition).Normalized() * pMaxSpeed;
-
-        // STEP 3 : apply the steering formula (use mass to slow down character's movement)
         return _CalculateSteering(desire_velocity, pVelocity, pMass);
     }
 
@@ -201,8 +200,27 @@ public static class Utils
         return pVelocity + steering;
     }
 
+    /// <summary>
+    /// Calculate the velocity to keep distance behind the leader
+    /// </summary>
+    /// <param name="pLeaderPosition">the position of the node to follow</param>
+    /// <param name="pFollowerPosition">the position of the follower</param>
+    /// <param name="pFollowOffset">the distance to keep between the leader and follower node</param>
+    /// <returns>A vector2 to represent the position to follow with the distance to keep</returns>
+    public static Vector2 Steering_CalculateDistanceBetweenFollowers(Vector2 pLeaderPosition, Vector2 pFollowerPosition, float pFollowOffset)
+    {
+        // Get the vector direction to the leader (behind the leader)
+        Vector2 direction = (pFollowerPosition - pLeaderPosition).Normalized();
+        Vector2 velocity = pFollowerPosition - (direction * pFollowOffset);
 
-    /* OLD - METHOD FROM GDSCRIPT
+        // To avoid the follower to be too close to the leader (or it will have a kind of Parkinson movement)
+        if (pLeaderPosition.DistanceTo(pFollowerPosition) <= pFollowOffset)
+            velocity = pFollowerPosition;
+
+        return velocity;
+    }
+
+    /* OLD Steering_CalculateFlee (2020-01-19) - METHOD FROM GDSCRIPT
 
     /// /// <summary>
     /// Calculate a velocity to flee from a destination
@@ -224,26 +242,6 @@ public static class Utils
     }
 
     */
-
-    /// <summary>
-    /// Calculate the velocity to keep distance behind the leader
-    /// </summary>
-    /// <param name="pLeaderPosition">the position of the node to follow</param>
-    /// <param name="pFollowerPosition">the position of the follower</param>
-    /// <param name="pFollowOffset">the distance to keep between the leader and follower node</param>
-    /// <returns>A vector2 to represent the position to follow with the distance to keep</returns>
-    public static Vector2 Steering_CalculateDistanceBetweenFollowers(Vector2 pLeaderPosition, Vector2 pFollowerPosition, float pFollowOffset)
-    {
-        // Get the vector direction to the leader (behind the leader)
-        Vector2 direction = (pFollowerPosition - pLeaderPosition).Normalized();
-        Vector2 velocity = pFollowerPosition - (direction * pFollowOffset);
-
-        // To avoid the follower to be too close to the leader (or it will have a kind of Parkinson movement)
-        if (pLeaderPosition.DistanceTo(pFollowerPosition) <= pFollowOffset)
-            velocity = pFollowerPosition;
-
-        return velocity;
-    }
 
 #endregion
 
