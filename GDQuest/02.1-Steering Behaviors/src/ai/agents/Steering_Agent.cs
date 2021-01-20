@@ -100,11 +100,11 @@ public class Steering_Agent : KinematicBody2D
         if (IsWander)
         {
             // Create a timer to set a new destination every XX time
-            Timer wandlerTimer = new Timer();
-            AddChild(wandlerTimer);
-            wandlerTimer.WaitTime = 2.0f;
-            wandlerTimer.Connect("timeout", this, nameof(_Wander_GetDestination));
-            wandlerTimer.Start();
+            Timer wanderTimer = new Timer();
+            AddChild(wanderTimer);
+            wanderTimer.WaitTime = 2.0f;
+            wanderTimer.Connect("timeout", this, nameof(_Wander_GetDestination));
+            wanderTimer.Start();
 
             _isWander = true;
         }
