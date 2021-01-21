@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Move : State
+public class Move_Template : State
 {
 #region HEADER
 

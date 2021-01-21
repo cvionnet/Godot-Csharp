@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Run : State
+public class Run_Template : State
 {
 #region HEADER
 

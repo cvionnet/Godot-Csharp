@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Steering_Agent : KinematicBody2D
+public class Steering_Agent_Template : KinematicBody2D
 {
 #region HEADER
 

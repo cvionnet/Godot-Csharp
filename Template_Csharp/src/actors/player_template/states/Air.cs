@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Air : State
+public class Air_Template : State
 {
 #region HEADER
 

@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Idle : State
+public class Idle_Template : State
 {
 #region HEADER
 
