@@ -9,11 +9,12 @@ public class Game : Node
 	[Export] public PackedScene MinionScene;
 	[Export] public int MinionMaxNumber = 20;
 
-	[Signal] public delegate void Player_Move(string animation, Vector2 destination);
+//	[Signal] public delegate void Player_Move(string animation, Vector2 destination);
 
 	private Player _player;
 	private Minion _minionInstance;
 	private int _minionCount;
+	private Vector2 _startPosition;
 
 #endregion
 
@@ -27,28 +28,18 @@ public class Game : Node
 		Utils.Rnd.Randomize();
 
 		_player = GetNode<Player>("Player");
+		_startPosition = GetNode<Position2D>("StartPosition").Position;
 	}
-
-/*		
-	public override void _Process(float delta)
-	{
-		if (Input.IsActionJustReleased("click"))
-		{
-			_CreateMinion(MinionMaxNumber);
-			EmitSignal(nameof(Player_Move), "walk", GetViewport().GetMousePosition());
-		}
-	}
-*/
-
-	//public override void _PhysicsProcess(float delta)
-	//{}
 
 	public override void _UnhandledInput(InputEvent @event)
 	{
 		if (@event.IsActionPressed("click"))
 		{
+			// Creates random minions
 			_CreateMinion(MinionMaxNumber);
-			EmitSignal(nameof(Player_Move), "walk", GetViewport().GetMousePosition());
+
+			// Move the player to the mouse coordinates
+//			EmitSignal(nameof(Player_Move), "walk",   GetViewport().GetMousePosition());
 		}
 	}
 
@@ -82,6 +73,7 @@ public class Game : Node
 				break;
 
 			_minionInstance = (Minion)MinionScene.Instance();
+			_minionInstance.Position = _startPosition;
 			GetNode("Followers").AddChild(_minionInstance);
 			_minionCount++;
 		}

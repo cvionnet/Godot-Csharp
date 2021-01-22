@@ -19,36 +19,26 @@ public class Player : KinematicBody2D
     public override void _Ready()
     {
         _animation = GetNode<AnimatedSprite>("AnimatedSprite");
-
-        Owner.Connect("Player_Move", this, nameof(_on_PlayerMove));
         _animation.Connect("animation_finished", this, nameof(_on_AnimationFinished));
 
         // Steering AI - Set the player node as leader
         Utils.LeaderToFollow = this;
     }
 
-    //public override void _Process(float delta)
-    //{}
-
-    //public override void _PhysicsProcess(float delta)
-    //{}
-
+	public override void _UnhandledInput(InputEvent @event)
+	{
+		if (@event.IsActionPressed("click"))
+		{
+			// Move the player to the mouse coordinates
+			_PlayerMove("walk", GetGlobalMousePosition());
+		}
+	}
 
 #endregion
 
 //*-------------------------------------------------------------------------*//
 
 #region SIGNAL CALLBACKS
-
-    /// <summary>
-    /// When a signal ask to change the animation
-    /// </summary>
-    /// <param name="pAnimation"></param>
-    public void _on_PlayerMove(string pAnimation, Vector2 pNewPosition)
-    {
-        _newPosition = pNewPosition;
-        _animation.Play(pAnimation);
-    }
 
     /// <summary>
     /// Called at every end of an animation
@@ -73,6 +63,16 @@ public class Player : KinematicBody2D
 //*-------------------------------------------------------------------------*//
 
 #region USER METHODS
+
+    /// <summary>
+    /// When a signal ask to change the animation
+    /// </summary>
+    /// <param name="pAnimation"></param>
+    private void _PlayerMove(string pAnimation, Vector2 pNewPosition)
+    {
+        _newPosition = pNewPosition;
+        _animation.Play(pAnimation);
+    }
 
 #endregion
 }
