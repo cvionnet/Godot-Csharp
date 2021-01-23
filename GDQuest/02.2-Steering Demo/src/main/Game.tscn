@@ -28,8 +28,8 @@ tracks/0/keys = {
 
 [node name="Game" type="Node"]
 script = ExtResource( 2 )
-MinionMaxNumber = 10
 MinionScene = ExtResource( 3 )
+MinionMaxNumber = 10
 
 [node name="Map" parent="." instance=ExtResource( 6 )]
 
@@ -46,6 +46,12 @@ position = Vector2( 134, 251 )
 
 [node name="Frog4" parent="Frogs" instance=ExtResource( 8 )]
 position = Vector2( 136, 239 )
+
+[node name="Frog5" parent="Frogs" instance=ExtResource( 8 )]
+position = Vector2( 122, 254 )
+
+[node name="Frog6" parent="Frogs" instance=ExtResource( 8 )]
+position = Vector2( 101, 252 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 51, 50 )

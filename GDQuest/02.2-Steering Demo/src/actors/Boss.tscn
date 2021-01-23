@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://assets/actors/titan/TitanWalk3.png" type="Texture" id=1]
 [ext_resource path="res://assets/actors/titan/TitanWalk1.png" type="Texture" id=2]
 [ext_resource path="res://assets/actors/titan/TitanWalk2.png" type="Texture" id=3]
 [ext_resource path="res://assets/actors/titan/TitanWalk4.png" type="Texture" id=4]
+[ext_resource path="res://src/actors/Boss.cs" type="Script" id=5]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -23,13 +24,16 @@ polygon = PoolVector2Array( -2, 0, 3.66667, 0, 2.66667, 7, -1, 7 )
 [node name="Boss" type="KinematicBody2D"]
 position = Vector2( 0, -24 )
 scale = Vector2( 3, 3 )
-collision_layer = 2
+collision_layer = 2147483656
 collision_mask = 0
+script = ExtResource( 5 )
+MaxSpeed = 5.0
+Mass = 100.0
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 1 )
 animation = "walk"
-frame = 1
+frame = 3
 playing = true
 flip_h = true
 

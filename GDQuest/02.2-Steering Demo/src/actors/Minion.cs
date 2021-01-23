@@ -149,7 +149,5 @@ public class Minion : KinematicBody2D
         }
     }
 
-
-
 #endregion
 }
