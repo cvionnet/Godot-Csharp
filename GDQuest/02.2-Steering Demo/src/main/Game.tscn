@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://src/actors/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/main/Game.cs" type="Script" id=2]
@@ -8,6 +8,8 @@
 [ext_resource path="res://src/scenes/map.tscn" type="PackedScene" id=6]
 [ext_resource path="res://assets/scenes/light.png" type="Texture" id=7]
 [ext_resource path="res://src/actors/Frog.tscn" type="PackedScene" id=8]
+[ext_resource path="res://assets/musics/music_journey_to_the_battlefield.ogg" type="AudioStream" id=9]
+[ext_resource path="res://assets/scenes/light_fow.png" type="Texture" id=10]
 
 [sub_resource type="Animation" id=1]
 resource_name = "moveSun"
@@ -25,6 +27,9 @@ tracks/0/keys = {
 "update": 0,
 "values": [ Vector2( 8, 111 ), Vector2( 215, 0 ), Vector2( 471, 89 ), Vector2( 215, 0 ), Vector2( 12.0787, 109.325 ) ]
 }
+
+[sub_resource type="CanvasItemMaterial" id=2]
+blend_mode = 3
 
 [node name="Game" type="Node"]
 script = ExtResource( 2 )
@@ -54,7 +59,7 @@ position = Vector2( 122, 254 )
 position = Vector2( 101, 252 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( 51, 50 )
+position = Vector2( 38, 93 )
 
 [node name="Followers" type="Node" parent="."]
 
@@ -82,3 +87,15 @@ shadow_enabled = true
 shadow_gradient_length = 2.0
 shadow_filter = 2
 shadow_filter_smooth = 5.0
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="Music" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource( 9 )
+volume_db = -5.0
+autoplay = true
+
+[node name="Fog" type="Sprite" parent="."]
+material = SubResource( 2 )
+texture = ExtResource( 10 )
+centered = false

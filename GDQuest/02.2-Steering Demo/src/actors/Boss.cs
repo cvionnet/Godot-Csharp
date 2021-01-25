@@ -7,6 +7,9 @@ public class Boss : KinematicBody2D
     [Export] public float MaxSpeed = 20.0f;
     [Export] public float Mass = 10.0f;
 
+    [Signal] public delegate void Minion_Attack();
+
+    public bool IsMouseHover { get; private set; }
 
     private Vector2 _targetGlobalPosition = Utils.VECTOR_0;
     private Vector2 _velocity = Utils.VECTOR_0;
@@ -21,28 +24,49 @@ public class Boss : KinematicBody2D
     // Called when the node enters the scene tree for the first time
     public override void _Ready()
     {
-            // Create a timer to set a new destination every XX time
-            Timer wanderTimer = new Timer();
-            AddChild(wanderTimer);
-            wanderTimer.WaitTime = 10.0f;
-            wanderTimer.Connect("timeout", this, nameof(_Wander_GetDestination));
-            wanderTimer.Start();
-    }
+        GetNode<Area2D>("MouseDetection").Connect("input_event", this, "_onInputEvent");
+        GetNode<Area2D>("MouseDetection").Connect("mouse_entered", this, "_onMouseEntered");
+        GetNode<Area2D>("MouseDetection").Connect("mouse_exited", this, "_onMouseExited");
 
-    //public override void _Process(float delta)
-    //{}
+        // Create a timer to set a new destination every XX time
+        Timer wanderTimer = new Timer();
+        AddChild(wanderTimer);
+        wanderTimer.WaitTime = 10.0f;
+        wanderTimer.Connect("timeout", this, nameof(_Wander_GetDestination));
+        wanderTimer.Start();
+    }
 
     public override void _PhysicsProcess(float delta)
     {
         _MoveCharacter();
     }
 
-
 #endregion
 
 //*-------------------------------------------------------------------------*//
 
 #region SIGNAL CALLBACKS
+
+    /// <summary>
+    /// When click on the boss
+    /// </summary>
+    public void _onInputEvent(Node viewport, InputEvent @event, int shape_idx)
+    {
+		if (@event.IsActionPressed("click"))
+		{
+            EmitSignal(nameof(Minion_Attack));
+		}
+    }
+
+    public void _onMouseEntered()
+    {
+        IsMouseHover = true;
+    }
+
+    public void _onMouseExited()
+    {
+        IsMouseHover = false;
+    }
 
 #endregion
 

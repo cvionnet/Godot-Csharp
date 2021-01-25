@@ -8,6 +8,8 @@ public class Player : KinematicBody2D
     [Signal] public delegate void Minion_Move();
 
     private AnimatedSprite _animation;
+    private AudioStreamPlayer _audioMove;
+    private Boss _boss;
     private Vector2 _newPosition;
 
 #endregion
@@ -21,13 +23,18 @@ public class Player : KinematicBody2D
         _animation = GetNode<AnimatedSprite>("AnimatedSprite");
         _animation.Connect("animation_finished", this, nameof(_on_AnimationFinished));
 
+        _audioMove = GetNode<AudioStreamPlayer>("Audio/Move");
+
+        _boss = GetParent().GetNode<Boss>("Boss");
+
         // Steering AI - Set the player node as leader
         Utils.LeaderToFollow = this;
     }
 
 	public override void _UnhandledInput(InputEvent @event)
 	{
-		if (@event.IsActionPressed("click"))
+		// Move the player if we don't click on the boss
+        if (@event.IsActionPressed("click") && !_boss.IsMouseHover)
 		{
 			// Move the player to the mouse coordinates
 			_PlayerMove("walk", GetGlobalMousePosition());
@@ -65,12 +72,16 @@ public class Player : KinematicBody2D
 #region USER METHODS
 
     /// <summary>
-    /// When a signal ask to change the animation
+    /// To change the animation
     /// </summary>
     /// <param name="pAnimation"></param>
     private void _PlayerMove(string pAnimation, Vector2 pNewPosition)
     {
         _newPosition = pNewPosition;
+
+        _audioMove.PitchScale = Utils.Rnd.RandfRange(0.7f, 1.3f);
+        _audioMove.Play();
+
         _animation.Play(pAnimation);
     }
 

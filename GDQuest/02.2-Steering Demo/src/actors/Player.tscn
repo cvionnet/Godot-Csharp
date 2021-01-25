@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://assets/actors/devil/DevilWalk3.png" type="Texture" id=1]
 [ext_resource path="res://assets/actors/devil/DevilWalk4.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://assets/actors/devil/DevilIdle4.png" type="Texture" id=7]
 [ext_resource path="res://assets/actors/devil/DevilIdle2.png" type="Texture" id=8]
 [ext_resource path="res://src/actors/Player.cs" type="Script" id=9]
+[ext_resource path="res://assets/sounds/whoosh_slow_deep_09.wav" type="AudioStream" id=10]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -60,3 +61,8 @@ shape = SubResource( 2 )
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]
 occluder = SubResource( 3 )
+
+[node name="Audio" type="Node" parent="."]
+
+[node name="Move" type="AudioStreamPlayer" parent="Audio"]
+stream = ExtResource( 10 )

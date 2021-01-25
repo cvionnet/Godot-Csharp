@@ -65,6 +65,7 @@ click={
 2d_physics/layer_2="monsters"
 2d_physics/layer_3="frogs"
 2d_physics/layer_4="world"
+2d_physics/layer_5="boss"
 
 [rendering]
 

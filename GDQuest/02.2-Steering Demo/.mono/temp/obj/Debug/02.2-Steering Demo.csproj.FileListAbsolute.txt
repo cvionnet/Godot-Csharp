@@ -1,8 +1,0 @@
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.2-Steering Demo\.mono\temp\bin\Debug\02.2-Steering Demo.dll
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.2-Steering Demo\.mono\temp\bin\Debug\02.2-Steering Demo.pdb
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.2-Steering Demo\.mono\temp\obj\Debug\02.2-Steering Demo.csprojAssemblyReference.cache
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.2-Steering Demo\.mono\temp\obj\Debug\02.2-Steering Demo.AssemblyInfoInputs.cache
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.2-Steering Demo\.mono\temp\obj\Debug\02.2-Steering Demo.AssemblyInfo.cs
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.2-Steering Demo\.mono\temp\obj\Debug\02.2-Steering Demo.csproj.CoreCompileInputs.cache
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.2-Steering Demo\.mono\temp\obj\Debug\02.2-Steering Demo.dll
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.2-Steering Demo\.mono\temp\obj\Debug\02.2-Steering Demo.pdb

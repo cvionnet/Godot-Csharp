@@ -9,12 +9,20 @@ public class Game : Node
 	[Export] public PackedScene MinionScene;
 	[Export] public int MinionMaxNumber = 20;
 
-//	[Signal] public delegate void Player_Move(string animation, Vector2 destination);
-
 	private Player _player;
 	private Minion _minionInstance;
 	private int _minionCount;
 	private Vector2 _startPosition;
+
+	// Fog of war
+	//private const string Light_ImagePath = "res://assets/scenes/light_fow.png";
+	//[Export] public String FOW_Light_Image;
+	private Sprite _fowSprite;
+	private Image _fogImage;
+	private ImageTexture _fogImageTexture;
+	private Image _lightImage;
+	private Vector2 _lightOffset;
+	[Export] public int FOW_Radius = 6;
 
 #endregion
 
@@ -25,23 +33,22 @@ public class Game : Node
 	// Called when the node enters the scene tree for the first time
 	public override void _Ready()
 	{
-		Utils.Rnd.Randomize();
+		Utils.Initialize_Utils(GetViewport());
 
 		_player = GetNode<Player>("Player");
 		_startPosition = GetNode<Position2D>("StartPosition").Position;
+
+		_FOW_Initialize();
+
+		_CreateMinion(MinionMaxNumber);
 	}
 
-	public override void _UnhandledInput(InputEvent @event)
+	public override void _Process(float delta)
 	{
-		if (@event.IsActionPressed("click"))
-		{
-			// Creates random minions
-			_CreateMinion(MinionMaxNumber);
-
-			// Move the player to the mouse coordinates
-//			EmitSignal(nameof(Player_Move), "walk",   GetViewport().GetMousePosition());
-		}
+		_FOW_Update(_player.Position / FOW_Radius);
 	}
+
+
 
 	// Use to add warning in the Editor   (must add the [Tool] attribute on the class)
 	public override string _GetConfigurationWarning()
@@ -77,6 +84,48 @@ public class Game : Node
 			GetNode("Followers").AddChild(_minionInstance);
 			_minionCount++;
 		}
+	}
+
+	private void _FOW_Initialize()
+	{
+		_fowSprite = GetNode<Sprite>("Fog");
+		_fowSprite.Scale *= FOW_Radius;
+
+		_fogImageTexture = new ImageTexture();
+
+		// Create a black image on the whole screen
+		_fogImage = new Image();
+		//_fogImage.Create(Mathf.FloorToInt(Utils.ScreenHeight), Mathf.FloorToInt(Utils.ScreenHeight), false, Image.Format.Rgbah);
+		_fogImage.Create(Mathf.FloorToInt(Utils.ScreenWidth / FOW_Radius), Mathf.FloorToInt(Utils.ScreenHeight / FOW_Radius), false, Image.Format.Rgbah);
+		_fogImage.Fill(Colors.Black);
+
+		// Load the light image
+		_lightImage = new Image();
+//		_lightImage.Load(FOW_Light_Image.ResourcePath);
+		_lightImage.Load(_fowSprite.Texture.ResourcePath);
+		_lightOffset = new Vector2(_lightImage.GetWidth()/2, _lightImage.GetHeight()/2);	// to center the image on the destination
+		_lightImage.Convert(Image.Format.Rgbah);	// apply the same format as _fogImage to allow to draw on it
+	}
+
+	private void _FOW_Update(Vector2 pNewPosition)
+	{
+		_fogImage.Lock();
+		_lightImage.Lock();
+
+		// Draw the light image onto the black image
+		Rect2 light_rect = new Rect2(Utils.VECTOR_0, new Vector2(_lightImage.GetWidth(), _lightImage.GetHeight()));
+		_fogImage.BlendRect(_lightImage, light_rect, pNewPosition - _lightOffset);
+
+		_fogImage.Unlock();
+		_lightImage.Unlock();
+
+		_FOW_Update_ImageTexture();
+	}
+
+	private void _FOW_Update_ImageTexture()
+	{
+		_fogImageTexture.CreateFromImage(_fogImage);
+		_fowSprite.Texture = _fogImageTexture;
 	}
 
 #endregion

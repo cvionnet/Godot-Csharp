@@ -7,6 +7,9 @@ public static class Utils
 {
 #region VARIABLES
 
+    public static float ScreenWidth;
+    public static float ScreenHeight;
+
     public static Vector2 VECTOR_0 = new Vector2(0.0f,0.0f);         // (=Vector2.ZERO in GDScript)
     public static Vector2 VECTOR_1 = new Vector2(1.0f,1.0f);
     public static Vector2 VECTOR_FLOOR = new Vector2(0,-1);         // (=Vector2.UP in GDScript) Use it for plateformer
@@ -18,6 +21,22 @@ public static class Utils
 #endregion
 
 //*-------------------------------------------------------------------------*//
+
+#region METHODS - GENERIC
+
+    /// <summary>
+    /// Call this method in the 1st scene of the game   ( Utils.Initialize_Utils(GetViewport()); )
+    /// </summary>
+    /// <param name="pGame">The viewport of the scene</param>
+    public static void Initialize_Utils(Viewport pGame)
+    {
+        Rnd.Randomize();
+
+		ScreenWidth = pGame.Size.x;
+		ScreenHeight = pGame.Size.y;
+    }
+
+#endregion
 
 #region METHODS - NODES
 
