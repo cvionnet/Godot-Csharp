@@ -5,7 +5,7 @@ public class Idle_Template : State
 {
 #region HEADER
 
-    private Move _moveNode;
+    private Move_Template _moveNode;
 
 #endregion
 
@@ -15,7 +15,7 @@ public class Idle_Template : State
 
     public override void _Ready()
     {
-        _moveNode = GetParent<Move>();
+        _moveNode = GetParent<Move_Template>();
     }
 
 #endregion

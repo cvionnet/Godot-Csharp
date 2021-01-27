@@ -7,7 +7,7 @@ public class Run_Template : State
 
     [Export] public float SpeedBoost = 200.0f;
 
-    private Move _moveNode;
+    private Move_Template _moveNode;
 
 #endregion
 
@@ -17,7 +17,7 @@ public class Run_Template : State
 
     public override void _Ready()
     {
-        _moveNode = GetParent<Move>();
+        _moveNode = GetParent<Move_Template>();
     }
 
 #endregion

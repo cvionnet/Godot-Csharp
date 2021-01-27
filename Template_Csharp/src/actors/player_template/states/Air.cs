@@ -9,7 +9,7 @@ public class Air_Template : State
     [Export] public float JumpImpulse = 900.0f;
     [Export] public int Jump_Max_Count = 2;
 
-    private Move _moveNode;
+    private Move_Template _moveNode;
     private int _jumpCount = 0;
 
 #endregion
@@ -20,7 +20,7 @@ public class Air_Template : State
 
     public override void _Ready()
     {
-        _moveNode = GetParent<Move>();
+        _moveNode = GetParent<Move_Template>();
     }
 
 #endregion
