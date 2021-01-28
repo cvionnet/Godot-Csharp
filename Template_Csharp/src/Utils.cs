@@ -36,6 +36,38 @@ public static class Utils
 		ScreenHeight = pGame.Size.y;
     }
 
+    /// <summary>
+    /// Return a int random value, avoiding 0
+    /// </summary>
+    /// <param name="min">min int value</param>
+    /// <param name="max">max int value</param>
+    /// <returns>int random value</returns>
+    public static int Rndi_AvoidZero(int min = -1, int max = 1)
+    {
+        int number;
+        do
+        {
+            number = Rnd.RandiRange(min, max);
+        } while (number == 0);
+        return number;
+    }
+
+    /// <summary>
+    /// Return a float random value, avoiding 0.0f
+    /// </summary>
+    /// <param name="min">min float value</param>
+    /// <param name="max">max float value</param>
+    /// <returns>float random value</returns>
+    public static float Rndf_AvoidZero(float min = -1.0f, float max = 1.0f)
+    {
+        float number;
+        do
+        {
+            number = Rnd.RandfRange(min, max);
+        } while (number == 0.0f);
+        return number;
+    }
+
 #endregion
 
 #region METHODS - NODES
