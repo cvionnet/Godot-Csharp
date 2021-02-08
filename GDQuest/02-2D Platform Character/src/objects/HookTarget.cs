@@ -9,10 +9,6 @@ public class HookTarget : Area2D
 
     [Signal] public delegate void HookedOntoFrom();
 
-    //Enums
-    //public enum Borders { Left, Right, Top, Bottom }
-
-    //Public
     public bool isActive {
         get => _isActive;
         set {
@@ -32,7 +28,6 @@ public class HookTarget : Area2D
         }
     }
 
-    //Private
     private Timer _timer;
 
     private Color COLOR_ACTIVE = new Color(0.9375f, 0.730906f, 0.025635f);

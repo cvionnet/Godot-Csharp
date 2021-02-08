@@ -52,10 +52,10 @@ public class Idle : State
         _moveNode.Physics_Update(delta);
 
         // Conditions of transition to Run or Air states
-        if (Utils.StateMachine_Node.RootNode.IsOnFloor() && _moveNode.isMoving)
-            Utils.StateMachine_Node.TransitionTo("Move/Run", Utils.StateMachine_Node.TransitionToParam_Void);
-        else if (!Utils.StateMachine_Node.RootNode.IsOnFloor())
-            Utils.StateMachine_Node.TransitionTo("Move/Air", Utils.StateMachine_Node.TransitionToParam_Void);
+        if (Utils.StateMachine_Player.RootNode.IsOnFloor() && _moveNode.isMoving)
+            Utils.StateMachine_Player.TransitionTo("Move/Run", Utils.StateMachine_Player.TransitionToParam_Void);
+        else if (!Utils.StateMachine_Player.RootNode.IsOnFloor())
+            Utils.StateMachine_Player.TransitionTo("Move/Air", Utils.StateMachine_Player.TransitionToParam_Void);
     }
 
     public override void Input_State(InputEvent @event)

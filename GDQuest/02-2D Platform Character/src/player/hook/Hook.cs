@@ -1,30 +1,20 @@
 using Godot;
 using System;
 
-public class Player : KinematicBody2D
+public class Hook : Position2D
 {
 #region HEADER
 
-    //[Export] public int alue = 0;
+    //[Export] private int Value = 0;
 
-    //[Signal] public delegate void MySignal(bool value1, int value2);
+    //[Signal] private delegate void MySignal(bool value1, int value2);
 
-    //Enums
-    //public enum Borders { Left, Right, Top, Bottom }
+    public bool isActive = true;
 
-    public bool isActive {
-        get => _isActive;
-        set {
-            _isActive = value;
-            _collider.Disabled = _isActive;
-        }
-    }
-
-    private StateMachine_Player _stateMachine;
-    private CollisionShape2D _collider;
-    private Hook _hook;
-
-    private bool _isActive = true;
+    private RayCast2D _raycast;
+    private Node2D _arrow;
+    private Area2D _snapDetector;
+    private Timer _coolDownTimer;
 
 #endregion
 
@@ -33,15 +23,16 @@ public class Player : KinematicBody2D
 #region GODOT METHODS
 
     // A constructor replace the _init() method in GDScript ("Called when the engine creates object in memory")
-    //public Player()
+    //public Hook()
     //{}
 
     // Called when the node enters the scene tree for the first time
     public override void _Ready()
     {
-        _stateMachine = GetNode<StateMachine_Player>("StateMachine");
-        _collider = GetNode<CollisionShape2D>("CollisionShape2D");
-        _hook = GetNode<Hook>("Hook");
+        _raycast = GetNode<RayCast2D>("RayCast2D");
+        _arrow = GetNode<Node2D>("Arrow");
+        _snapDetector = GetNode<Area2D>("SnapDetector");
+        _coolDownTimer = GetNode<Timer>("Cooldown");
     }
 
     // To draw custom nodes (primitives ...). Called once, then draw commands are cached.
@@ -60,7 +51,7 @@ public class Player : KinematicBody2D
     //public override string _GetConfigurationWarning()
     //{ return "Add your warning message here"; }
 
-    // Use to detect a key not defined in the Input Manager
+    // Use to detect a key not defined in the Input Manager  (called only when a touch is pressed or released - not suitable for long press like run button)
     // Note : it's cleaner to define key in the Input Manager and use  Input.IsActionPressed("myaction")   in  _Process
     /*public override void _UnhandledInput(InputEvent @event)
     {
@@ -86,6 +77,24 @@ public class Player : KinematicBody2D
 //*-------------------------------------------------------------------------*//
 
 #region USER METHODS
+
+    /// <summary>
+    /// Get a True if the hook is active
+    /// </summary>
+    /// <returns>A boolean</returns>
+    public bool CanHook()
+    {
+        return isActive && _snapDetector.HasTarget() && _coolDownTimer.IsStopped();
+    }
+
+    /// <summary>
+    /// Get the direction between 2 objects (eg : pActualPosition can be the player)
+    /// </summary>
+    /// <returns>A Vector2 to represent the direction</returns>
+    public Vector2 GetAimDirection()
+    {
+        return Utils.GetDirectionBetween2Objects(GlobalPosition, GetGlobalMousePosition());
+    }
 
 #endregion
 }

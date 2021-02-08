@@ -1,0 +1,28 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://src/player/hook/StateMachine_Hook.cs" type="Script" id=1]
+[ext_resource path="res://src/player/hook/Hook.cs" type="Script" id=2]
+[ext_resource path="res://src/player/hook/states/Aim.cs" type="Script" id=3]
+[ext_resource path="res://src/player/hook/states/Fire.cs" type="Script" id=4]
+[ext_resource path="res://src/player/hook/Arrow.tscn" type="PackedScene" id=5]
+[ext_resource path="res://src/player/hook/SnapDetector.tscn" type="PackedScene" id=6]
+
+[node name="Hook" type="Position2D"]
+script = ExtResource( 2 )
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+
+[node name="Arrow" parent="." instance=ExtResource( 5 )]
+
+[node name="SnapDetector" parent="." instance=ExtResource( 6 )]
+
+[node name="Cooldown" type="Timer" parent="."]
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 1 )
+
+[node name="Aim" type="Node" parent="StateMachine"]
+script = ExtResource( 3 )
+
+[node name="Fire" type="Node" parent="StateMachine/Aim"]
+script = ExtResource( 4 )

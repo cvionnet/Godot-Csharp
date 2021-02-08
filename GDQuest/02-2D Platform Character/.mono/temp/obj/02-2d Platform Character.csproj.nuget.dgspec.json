@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Tutos\\GDQuest\\02-2D Platform Character\\02-2d Platform Character.csproj": {}
+    "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Github\\Godot-Csharp\\GDQuest\\02-2D Platform Character\\02-2d Platform Character.csproj": {}
   },
   "projects": {
-    "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Tutos\\GDQuest\\02-2D Platform Character\\02-2d Platform Character.csproj": {
+    "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Github\\Godot-Csharp\\GDQuest\\02-2D Platform Character\\02-2d Platform Character.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Tutos\\GDQuest\\02-2D Platform Character\\02-2d Platform Character.csproj",
+        "projectUniqueName": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Github\\Godot-Csharp\\GDQuest\\02-2D Platform Character\\02-2d Platform Character.csproj",
         "projectName": "02-2d Platform Character",
-        "projectPath": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Tutos\\GDQuest\\02-2D Platform Character\\02-2d Platform Character.csproj",
+        "projectPath": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Github\\Godot-Csharp\\GDQuest\\02-2D Platform Character\\02-2d Platform Character.csproj",
         "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Tutos\\GDQuest\\02-2D Platform Character\\.mono\\temp\\obj\\",
+        "outputPath": "C:\\Mega\\MEGAsync\\Dev\\Games\\Godot\\Github\\Godot-Csharp\\GDQuest\\02-2D Platform Character\\.mono\\temp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"

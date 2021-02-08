@@ -54,11 +54,11 @@ public class Run : State
         _moveNode.Physics_Update(delta);
 
         // Conditions of transition to Idle or Air states
-        if (Utils.StateMachine_Node.RootNode.IsOnFloor() && !_moveNode.isMoving)
-            Utils.StateMachine_Node.TransitionTo("Move/Idle", Utils.StateMachine_Node.TransitionToParam_Void);
+        if (Utils.StateMachine_Player.RootNode.IsOnFloor() && !_moveNode.isMoving)
+            Utils.StateMachine_Player.TransitionTo("Move/Idle", Utils.StateMachine_Player.TransitionToParam_Void);
         // _moveNode.Velocity.Length() : to deal with deceleration (force the character to stop when his velocity is close to 0)
-        else if (!Utils.StateMachine_Node.RootNode.IsOnFloor() && _moveNode.Velocity.Length() < 1.0f)
-            Utils.StateMachine_Node.TransitionTo("Move/Air", Utils.StateMachine_Node.TransitionToParam_Void);
+        else if (!Utils.StateMachine_Player.RootNode.IsOnFloor() && _moveNode.Velocity.Length() < 1.0f)
+            Utils.StateMachine_Player.TransitionTo("Move/Air", Utils.StateMachine_Player.TransitionToParam_Void);
     }
 
     public override void Input_State(InputEvent @event)
@@ -71,7 +71,7 @@ public class Run : State
     /// </summary>
     private void _Movement_Run()
     {
-        if (Utils.StateMachine_Node.RootNode.IsOnFloor() && Input.IsActionPressed("button_X"))
+        if (Utils.StateMachine_Player.RootNode.IsOnFloor() && Input.IsActionPressed("button_X"))
             _moveNode.MaxSpeed.x = _moveNode.MaxSpeed_Default.x + SpeedBoost;
         else
             _moveNode.MaxSpeed = _moveNode.MaxSpeed_Default;

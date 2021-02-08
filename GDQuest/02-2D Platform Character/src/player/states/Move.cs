@@ -85,7 +85,7 @@ public class Move : State
 
         // Move the player
         Velocity = Utils.CalculateVelocity(Velocity, MaxSpeed, Acceleration, Decceleration, Direction, delta);
-        Velocity = Utils.StateMachine_Node.RootNode.MoveAndSlide(Velocity, Utils.VECTOR_FLOOR);
+        Velocity = Utils.StateMachine_Player.RootNode.MoveAndSlide(Velocity, Utils.VECTOR_FLOOR);
     }
 
     /// <summary>
@@ -93,12 +93,12 @@ public class Move : State
     /// </summary>
     private void _Movement_Jump(InputEvent @event)
     {
-        if (Utils.StateMachine_Node.RootNode.IsOnFloor() && @event.IsActionPressed("button_A"))
+        if (Utils.StateMachine_Player.RootNode.IsOnFloor() && @event.IsActionPressed("button_A"))
         {
             Godot.Collections.Dictionary<string,object> param = new Godot.Collections.Dictionary<string,object>();
             param.Add("impulse", true);
 
-            Utils.StateMachine_Node.TransitionTo("Move/Air", param);
+            Utils.StateMachine_Player.TransitionTo("Move/Air", param);
         }
     }
 #endregion

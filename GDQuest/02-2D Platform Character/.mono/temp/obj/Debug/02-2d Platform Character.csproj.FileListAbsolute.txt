@@ -6,3 +6,11 @@ C:\Mega\MEGAsync\Dev\Games\Godot\Tutos\GDQuest\02-2D Platform Character\.mono\te
 C:\Mega\MEGAsync\Dev\Games\Godot\Tutos\GDQuest\02-2D Platform Character\.mono\temp\obj\Debug\02-2d Platform Character.csproj.CoreCompileInputs.cache
 C:\Mega\MEGAsync\Dev\Games\Godot\Tutos\GDQuest\02-2D Platform Character\.mono\temp\obj\Debug\02-2d Platform Character.dll
 C:\Mega\MEGAsync\Dev\Games\Godot\Tutos\GDQuest\02-2D Platform Character\.mono\temp\obj\Debug\02-2d Platform Character.pdb
+C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02-2D Platform Character\.mono\temp\bin\Debug\02-2d Platform Character.dll
+C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02-2D Platform Character\.mono\temp\bin\Debug\02-2d Platform Character.pdb
+C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02-2D Platform Character\.mono\temp\obj\Debug\02-2d Platform Character.csprojAssemblyReference.cache
+C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02-2D Platform Character\.mono\temp\obj\Debug\02-2d Platform Character.AssemblyInfoInputs.cache
+C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02-2D Platform Character\.mono\temp\obj\Debug\02-2d Platform Character.AssemblyInfo.cs
+C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02-2D Platform Character\.mono\temp\obj\Debug\02-2d Platform Character.csproj.CoreCompileInputs.cache
+C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02-2D Platform Character\.mono\temp\obj\Debug\02-2d Platform Character.dll
+C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02-2D Platform Character\.mono\temp\obj\Debug\02-2d Platform Character.pdb
