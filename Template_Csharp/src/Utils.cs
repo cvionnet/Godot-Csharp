@@ -12,11 +12,12 @@ public static class Utils
 
     public static Vector2 VECTOR_0 = new Vector2(0.0f,0.0f);         // (=Vector2.ZERO in GDScript)
     public static Vector2 VECTOR_1 = new Vector2(1.0f,1.0f);
-    public static Vector2 VECTOR_FLOOR = new Vector2(0,-1);         // (=Vector2.UP in GDScript) Use it for plateformer
+    public static Vector2 VECTOR_FLOOR = new Vector2(0,-1);          // (=Vector2.UP in GDScript) Use it for plateformer
 
     public static RandomNumberGenerator Rnd = new RandomNumberGenerator();
 
-    public static StateMachine StateMachine_Node { get; set; }
+    // References to state machines
+    public static StateMachine_Template StateMachine_Template { get; set; }
 
 #endregion
 
