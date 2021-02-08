@@ -117,6 +117,18 @@ public static class Utils
     }
 
     /// <summary>
+    /// Get the direction between 2 objects
+    /// eg : pActualPosition can be the player.GlobalPosition 
+    /// </summary>
+    /// <returns>A Vector2 to represent the direction</returns>
+    public static Vector2 GetDirectionBetween2Objects(Vector2 pActualPosition, Vector2 pTargetPosition)
+    {
+        Vector2 direction = VECTOR_0;
+        direction = (pTargetPosition - pActualPosition).Normalized();
+        return direction;
+    }
+
+    /// <summary>
     /// Calculate the velocity of a character
     /// </summary>
     /// <param name="pOld_Velocity">the actual velocity of the character</param>
