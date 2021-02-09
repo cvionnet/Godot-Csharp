@@ -8,18 +8,18 @@ public class StateMachine_Core : Node
 #region HEADER
 
     // A reference to the active State scene
-    public State ActiveState {
+    public IState ActiveState {
         get => _activeState;
         set {
             _activeState = value;
-            _activeStateName = _activeState.Name;
+            _activeStateName = _activeState.GetName();
         }
     }
 
     // An empty dictionary to pass (as default) as 2nd parameter to TransitionTo()
     public Godot.Collections.Dictionary<string, object> TransitionToParam_Void {get; private set; }
 
-    private State _activeState;
+    private IState _activeState;
     private string _activeStateName;    // to store the name of the Node (used in the DebugDock node)
 
 #endregion
@@ -35,8 +35,8 @@ public class StateMachine_Core : Node
         TransitionToParam_Void.Add("", 0);
 
         // Set the initial state
-        ActiveState = GetNode<State>(pInitialState);
-        _activeStateName = _activeState.Name;
+        ActiveState = GetNode<IState>(pInitialState);
+        _activeStateName = _activeState.GetName();
 
         _activeState.Enter_State(TransitionToParam_Void);
     }
@@ -79,7 +79,7 @@ public class StateMachine_Core : Node
             return;
 
         // Get the new state, exit the previous one, set the new one as active and enter it
-        State new_state = GetNode<State>(pTargetStatePath);
+        IState new_state = GetNode<IState>(pTargetStatePath);
         _activeState.Exit_State();
         ActiveState = new_state;
         _activeState.Enter_State(pParam);

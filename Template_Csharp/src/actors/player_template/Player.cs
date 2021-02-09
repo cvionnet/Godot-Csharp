@@ -13,7 +13,7 @@ public class Player_Template : KinematicBody2D
         }
     }
 
-    private StateMachine _stateMachine;
+    private StateMachine_Player _stateMachine;
     private CollisionShape2D _collider;
 
     private bool _isActive = true;
@@ -27,7 +27,7 @@ public class Player_Template : KinematicBody2D
     // Called when the node enters the scene tree for the first time
     public override void _Ready()
     {
-        _stateMachine = GetNode<StateMachine>("StateMachine");
+        _stateMachine = GetNode<StateMachine_Player>("StateMachine");
         _collider = GetNode<CollisionShape2D>("CollisionShape2D");
     }
 

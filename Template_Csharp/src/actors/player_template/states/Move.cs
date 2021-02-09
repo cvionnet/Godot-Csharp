@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Move_Template : State
+public class Move_Template : Node, IState
 {
 #region HEADER
 
@@ -43,6 +43,36 @@ public class Move_Template : State
 
 //*-------------------------------------------------------------------------*//
 
+#region INTERFACE IMPLEMENTATION
+
+    public void Enter_State(Godot.Collections.Dictionary<string, object> pParam)
+    { }
+
+    public void Exit_State()
+    { }
+
+    public void Update(float delta)
+    { }
+
+    public void Physics_Update(float delta)
+    {
+        _Movement_Left_Right(delta);
+    }
+
+    public void Input_State(InputEvent @event)
+    {
+        _Movement_Jump(@event);
+    }
+
+    public string GetName()
+    {
+        return this.Name;
+    }
+
+#endregion
+
+//*-------------------------------------------------------------------------*//
+
 #region SIGNAL CALLBACKS
 
 #endregion
@@ -50,27 +80,6 @@ public class Move_Template : State
 //*-------------------------------------------------------------------------*//
 
 #region USER METHODS
-
-    public override void Enter_State(Godot.Collections.Dictionary<string, object> pParam)
-    { }
-
-    public override void Exit_State()
-    { }
-
-    public override void Update(float delta)
-    { }
-
-    public override void Physics_Update(float delta)
-    {
-        _Movement_Left_Right(delta);
-
-        //???? EmitSignal("player_moved", _root);  // for the camera ????  (see the end of https://gdquest.mavenseed.com/lessons/the-parent-move-state)
-    }
-
-    public override void Input_State(InputEvent @event)
-    {
-        _Movement_Jump(@event);
-    }
 
     /// <summary>
     /// Movement on x axis
@@ -85,7 +94,7 @@ public class Move_Template : State
 
         // Move the player
         Velocity = Utils.CalculateVelocity(Velocity, MaxSpeed, Acceleration, Decceleration, Direction, delta);
-        Velocity = Utils.StateMachine_Template.RootNode.MoveAndSlide(Velocity, Utils.VECTOR_FLOOR);
+        Velocity = Utils.StateMachine_Player.RootNode.MoveAndSlide(Velocity, Utils.VECTOR_FLOOR);
     }
 
     /// <summary>
@@ -93,13 +102,14 @@ public class Move_Template : State
     /// </summary>
     private void _Movement_Jump(InputEvent @event)
     {
-        if (Utils.StateMachine_Template.RootNode.IsOnFloor() && @event.IsActionPressed("button_A"))
+        if (Utils.StateMachine_Player.RootNode.IsOnFloor() && @event.IsActionPressed("button_A"))
         {
             Godot.Collections.Dictionary<string,object> param = new Godot.Collections.Dictionary<string,object>();
             param.Add("impulse", true);
 
-            Utils.StateMachine_Template.TransitionTo("Move/Air", param);
+            Utils.StateMachine_Player.TransitionTo("Move/Air", param);
         }
     }
+
 #endregion
 }
