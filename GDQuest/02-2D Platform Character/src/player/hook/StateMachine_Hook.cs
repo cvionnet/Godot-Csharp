@@ -29,6 +29,21 @@ public class StateMachine_Hook : StateMachine_Core
         _Init_StateMachine(_groupName);
     }
 
+    public override void _Process(float delta)
+    {
+        base.Update(delta);
+    }
+
+    public override void _PhysicsProcess(float delta)
+    {
+        base.Physics_Update(delta);
+    }
+
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        base.Input_State(@event);
+    }
+
 #endregion
 
 //*-------------------------------------------------------------------------*//
@@ -60,6 +75,8 @@ public class StateMachine_Hook : StateMachine_Core
         {
             Utils.StateMachine_Hook = (StateMachine_Hook)node;
             RootNode = (Position2D)Owner;
+
+            base.Initialize(InitialState);
         }
         else
         {

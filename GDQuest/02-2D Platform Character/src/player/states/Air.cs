@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Air : State
+public class Air : Node, IState
 {
 #region HEADER
 
@@ -27,15 +27,9 @@ public class Air : State
 
 //*-------------------------------------------------------------------------*//
 
-#region SIGNAL CALLBACKS
+#region INTERFACE IMPLEMENTATION
 
-#endregion
-
-//*-------------------------------------------------------------------------*//
-
-#region USER METHODS
-
-    public override void Enter_State(Godot.Collections.Dictionary<string, object> pParam)
+    public void Enter_State(Godot.Collections.Dictionary<string, object> pParam)
     {
         _moveNode.Enter_State(pParam);
 
@@ -59,7 +53,7 @@ GD.Print("AIR - Use param 'velocity' ");
         }
     }
 
-    public override void Exit_State()
+    public void Exit_State()
     {
         _moveNode.Acceleration = _moveNode.Acceleration_Default;
         _jumpCount = 0;
@@ -67,12 +61,12 @@ GD.Print("AIR - Use param 'velocity' ");
         _moveNode.Exit_State();
     }
 
-    public override void Update(float delta)
+    public void Update(float delta)
     {
         _moveNode.Update(delta);
     }
 
-    public override void Physics_Update(float delta)
+    public void Physics_Update(float delta)
     {
         _moveNode.Physics_Update(delta);
 
@@ -85,13 +79,30 @@ GD.Print("AIR - Use param 'velocity' ");
         }
     }
 
-    public override void Input_State(InputEvent @event)
+    public void Input_State(InputEvent @event)
     {
         _moveNode.Input_State(@event);
 
         if (_jumpCount < Jump_Max_Count && @event.IsActionPressed("button_A"))
             _Movement_Jump();
     }
+
+    public string GetStateName()
+    {
+        return this.Name;
+    }
+
+#endregion
+
+//*-------------------------------------------------------------------------*//
+
+#region SIGNAL CALLBACKS
+
+#endregion
+
+//*-------------------------------------------------------------------------*//
+
+#region USER METHODS
 
     /// <summary>
     /// Make the player jump

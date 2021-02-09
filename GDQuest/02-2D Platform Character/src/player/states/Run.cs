@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Run : State
+public class Run : Node, IState
 {
 #region HEADER
 
@@ -24,32 +24,26 @@ public class Run : State
 
 //*-------------------------------------------------------------------------*//
 
-#region SIGNAL CALLBACKS
+#region INTERFACE IMPLEMENTATION
 
-#endregion
-
-//*-------------------------------------------------------------------------*//
-
-#region USER METHODS
-
-    public override void Enter_State(Godot.Collections.Dictionary<string, object> pParam)
+    public void Enter_State(Godot.Collections.Dictionary<string, object> pParam)
     {
         _moveNode.Enter_State(pParam);
     }
 
-    public override void Exit_State()
+    public void Exit_State()
     {
         _moveNode.Exit_State();
     }
 
-    public override void Update(float delta)
+    public void Update(float delta)
     {
         _moveNode.Update(delta);
 
         _Movement_Run();
     }
 
-    public override void Physics_Update(float delta)
+    public void Physics_Update(float delta)
     {
         _moveNode.Physics_Update(delta);
 
@@ -61,10 +55,27 @@ public class Run : State
             Utils.StateMachine_Player.TransitionTo("Move/Air", Utils.StateMachine_Player.TransitionToParam_Void);
     }
 
-    public override void Input_State(InputEvent @event)
+    public void Input_State(InputEvent @event)
     {
         _moveNode.Input_State(@event);
     }
+
+    public string GetStateName()
+    {
+        return this.Name;
+    }
+
+#endregion
+
+//*-------------------------------------------------------------------------*//
+
+#region SIGNAL CALLBACKS
+
+#endregion
+
+//*-------------------------------------------------------------------------*//
+
+#region USER METHODS
 
     /// <summary>
     /// Make the player run faster

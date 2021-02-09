@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Move : State
+public class Move : Node, IState
 {
 #region HEADER
 
@@ -43,6 +43,38 @@ public class Move : State
 
 //*-------------------------------------------------------------------------*//
 
+#region INTERFACE IMPLEMENTATION
+
+    public void Enter_State(Godot.Collections.Dictionary<string, object> pParam)
+    { }
+
+    public void Exit_State()
+    { }
+
+    public void Update(float delta)
+    { }
+
+    public void Physics_Update(float delta)
+    {
+        _Movement_Left_Right(delta);
+
+        //???? EmitSignal("player_moved", _root);  // for the camera ????  (see the end of https://gdquest.mavenseed.com/lessons/the-parent-move-state)
+    }
+
+    public void Input_State(InputEvent @event)
+    {
+        _Movement_Jump(@event);
+    }
+
+    public string GetStateName()
+    {
+        return this.Name;
+    }
+
+#endregion
+
+//*-------------------------------------------------------------------------*//
+
 #region SIGNAL CALLBACKS
 
 #endregion
@@ -50,27 +82,6 @@ public class Move : State
 //*-------------------------------------------------------------------------*//
 
 #region USER METHODS
-
-    public override void Enter_State(Godot.Collections.Dictionary<string, object> pParam)
-    { }
-
-    public override void Exit_State()
-    { }
-
-    public override void Update(float delta)
-    { }
-
-    public override void Physics_Update(float delta)
-    {
-        _Movement_Left_Right(delta);
-
-        //???? EmitSignal("player_moved", _root);  // for the camera ????  (see the end of https://gdquest.mavenseed.com/lessons/the-parent-move-state)
-    }
-
-    public override void Input_State(InputEvent @event)
-    {
-        _Movement_Jump(@event);
-    }
 
     /// <summary>
     /// Movement on x axis
@@ -101,5 +112,6 @@ public class Move : State
             Utils.StateMachine_Player.TransitionTo("Move/Air", param);
         }
     }
+
 #endregion
 }
