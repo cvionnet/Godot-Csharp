@@ -12,7 +12,7 @@ public class StateMachine_Core : Node
         get => _activeState;
         set {
             _activeState = value;
-            _activeStateName = _activeState.GetName();
+            _activeStateName = _activeState.GetStateName();
         }
     }
 
@@ -36,7 +36,7 @@ public class StateMachine_Core : Node
 
         // Set the initial state
         ActiveState = GetNode<IState>(pInitialState);
-        _activeStateName = _activeState.GetName();
+        _activeStateName = _activeState.GetStateName();
 
         _activeState.Enter_State(TransitionToParam_Void);
     }

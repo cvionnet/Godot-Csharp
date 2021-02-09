@@ -86,7 +86,7 @@ public class Air_Template : Node, IState
             _Movement_Jump();
     }
 
-    public string GetName()
+    public string GetStateName()
     {
         return this.Name;
     }

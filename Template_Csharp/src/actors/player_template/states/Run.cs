@@ -60,7 +60,7 @@ public class Run_Template : Node, IState
         _moveNode.Input_State(@event);
     }
 
-    public string GetName()
+    public string GetStateName()
     {
         return this.Name;
     }

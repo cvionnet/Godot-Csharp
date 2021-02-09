@@ -21,7 +21,7 @@ public interface IState
     void Input_State(InputEvent @event);
 
     /// <summary>
-    /// Implementation : public string GetName() { return this.Name; }
+    /// Implementation : public string GetStateName() { return this.Name; }
     /// </summary>
-    string GetName();
+    string GetStateName();
 }

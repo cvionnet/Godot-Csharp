@@ -64,7 +64,7 @@ public class Move_Template : Node, IState
         _Movement_Jump(@event);
     }
 
-    public string GetName()
+    public string GetStateName()
     {
         return this.Name;
     }
