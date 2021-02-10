@@ -61,21 +61,6 @@ public class Arrow : Node2D
         _startLength = _head.Position.x - (_head.Texture.GetWidth()/2 * _head.Scale.x) + 4.0f;    // 4.0f is a offset
     }
 
-
-    // Use to detect a key not defined in the Input Manager  (called only when a touch is pressed or released - not suitable for long press like run button)
-    // Note : it's cleaner to define key in the Input Manager and use  Input.IsActionPressed("myaction")   in  _Process
-    public override void _UnhandledInput(InputEvent @event)
-    {
-        if (@event is InputEventKey eventKey)
-        {
-            // Close game if press Escape
-            if (eventKey.Pressed && eventKey.Scancode == (int)KeyList.Space)
-            {
-                HookPosition = GetGlobalMousePosition();
-            }
-        }
-    }
-
 #endregion
 
 //*-------------------------------------------------------------------------*//

@@ -40,7 +40,6 @@ public class Air : Node, IState
         // To preserve the character inertia in the air
         if (pParam.ContainsKey("velocity"))
         {
-GD.Print("AIR - Use param 'velocity' ");
             _moveNode.Velocity = (Vector2)pParam["velocity"];       // to override the default velocity
             _moveNode.MaxSpeed.x = Mathf.Max(Mathf.Abs(_moveNode.Velocity.x), _moveNode.MaxSpeed_Default.x);
         }
@@ -73,6 +72,9 @@ GD.Print("AIR - Use param 'velocity' ");
         // Conditions of transition to Idle or Run states
         if (Utils.StateMachine_Player.RootNode.IsOnFloor())
         {
+            // For the Dash state
+            _moveNode.DashCount = 0;
+
             // _moveNode.Velocity.Length() : to deal with deceleration (force the character to stop when his velocity is close to 0)
             string target_state = (_moveNode.isMoving && _moveNode.Velocity.Length() < 1.0f) ? "Move/Idle" : "Move/Run";
             Utils.StateMachine_Player.TransitionTo(target_state, Utils.StateMachine_Player.TransitionToParam_Void);
@@ -85,6 +87,16 @@ GD.Print("AIR - Use param 'velocity' ");
 
         if (_jumpCount < Jump_Max_Count && @event.IsActionPressed("button_A"))
             _Movement_Jump();
+
+        // For the Dash state
+        if (_moveNode.DashCount == 0 && @event.IsActionPressed("dash"))
+        {
+            _moveNode.DashCount++;
+
+            Godot.Collections.Dictionary<string,object> param = new Godot.Collections.Dictionary<string,object>();
+            param.Add("direction", _moveNode.Hook.Raycast.CastTo.Normalized());
+            Utils.StateMachine_Player.TransitionTo("Move/Dash", param);
+        }
     }
 
     public string GetStateName()

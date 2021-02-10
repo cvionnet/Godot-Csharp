@@ -18,10 +18,11 @@ public class Move : Node, IState
     public Vector2 Decceleration_Default { get; private set; }
     public Vector2 Velocity;
     public Vector2 Direction { get; private set; }
+    public int DashCount = 0;
 
     public bool isMoving = false;
 
-    private Hook _hook;
+    public Hook Hook;
 
 #endregion
 
@@ -31,7 +32,7 @@ public class Move : Node, IState
 
     public override void _Ready()
     {
-        _hook = (Hook)Utils.StateMachine_Hook.RootNode;
+        Hook = (Hook)Utils.StateMachine_Hook.RootNode;
 
         MaxSpeed = MaxSpeed_Default;
 
@@ -51,12 +52,12 @@ public class Move : Node, IState
 
     public void Enter_State(Godot.Collections.Dictionary<string, object> pParam)
     {
-        _hook.Connect("HookedOntoTarget", this, nameof(_onHook_HookedOntoTarget));
+        Hook.Connect("HookedOntoTarget", this, nameof(_onHook_HookedOntoTarget));
     }
 
     public void Exit_State()
     {
-        _hook.Disconnect("HookedOntoTarget", this, nameof(_onHook_HookedOntoTarget));
+        Hook.Disconnect("HookedOntoTarget", this, nameof(_onHook_HookedOntoTarget));
     }
 
     public void Update(float delta)
@@ -87,7 +88,7 @@ public class Move : Node, IState
 
     public void _onHook_HookedOntoTarget(Vector2 pTargetGlobalPosition)
     {
-        Vector2 to_target = pTargetGlobalPosition - _hook.GlobalPosition;
+        Vector2 to_target = pTargetGlobalPosition - Hook.GlobalPosition;
 
         // Check if the player is on the floor and the target bellow the character
         if (Utils.StateMachine_Player.RootNode.IsOnFloor() && to_target.y > 0.0f)
@@ -98,7 +99,7 @@ public class Move : Node, IState
         param.Add("target_global_position", pTargetGlobalPosition);
         param.Add("velocity", Velocity);
 
-        _hook.Arrow.HookPosition = pTargetGlobalPosition;
+        Hook.Arrow.HookPosition = pTargetGlobalPosition;
         Utils.StateMachine_Player.TransitionTo("Hook", param);
     }
 

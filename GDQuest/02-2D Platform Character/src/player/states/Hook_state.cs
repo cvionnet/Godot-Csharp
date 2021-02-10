@@ -17,12 +17,6 @@ public class Hook_state : Node, IState
 
 #region GODOT METHODS
 
-
-    // Called when the node enters the scene tree for the first time
-    //public override void _Ready()
-    //{}
-
-
 #endregion
 
 //*-------------------------------------------------------------------------*//
