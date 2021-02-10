@@ -10,8 +10,11 @@ public static class Utils
     public static float ScreenWidth;
     public static float ScreenHeight;
 
+    private const float _zero = 0.0f;
+
     public static Vector2 VECTOR_0 = new Vector2(0.0f,0.0f);         // (=Vector2.ZERO in GDScript)
     public static Vector2 VECTOR_1 = new Vector2(1.0f,1.0f);
+    public static Vector2 VECTOR_INF = new Vector2(1.0f/_zero,1.0f/_zero);    // infinite vector  (=Vector2.INF in GDScript)
     public static Vector2 VECTOR_FLOOR = new Vector2(0,-1);          // (=Vector2.UP in GDScript) Use it for plateformer
 
     public static RandomNumberGenerator Rnd = new RandomNumberGenerator();
@@ -118,14 +121,27 @@ public static class Utils
 
     /// <summary>
     /// Get the direction between 2 objects
-    /// eg : pActualPosition can be the player.GlobalPosition 
     /// </summary>
+    /// <param name="pActualPosition">A vector2 representing the 1st object (eg : the player.GlobalPosition)</param>
+    /// <param name="pTargetPosition">A vector2 representing the 2nd object (eg : the enemy.GlobalPosition)</param>
+    /// <param name="pNormalize">set to True to return a normalized vector</param>
     /// <returns>A Vector2 to represent the direction</returns>
-    public static Vector2 GetDirectionBetween2Objects(Vector2 pActualPosition, Vector2 pTargetPosition)
+    public static Vector2 GetDirectionBetween_2_Objects(Vector2 pActualPosition, Vector2 pTargetPosition, bool pNormalize = true)
     {
-        Vector2 direction = VECTOR_0;
-        direction = (pTargetPosition - pActualPosition).Normalized();
+        //Vector2 direction = VECTOR_0;
+        Vector2 direction = pNormalize ? (pTargetPosition - pActualPosition).Normalized() : (pTargetPosition - pActualPosition);
         return direction;
+    }
+
+    /// <summary>
+    /// Get the distance between 2 objects
+    /// </summary>
+    /// <param name="pActualPosition">A vector2 representing the 1st object (eg : the player.GlobalPosition)</param>
+    /// <param name="pTargetPosition">A vector2 representing the 2nd object (eg : the enemy.GlobalPosition)</param>
+    /// <returns>A float to represent the distance</returns>
+    public static float GetDistanceBetween_2_Objects(Vector2 pActualPosition, Vector2 pTargetPosition)
+    {
+        return (pTargetPosition - pActualPosition).Length();
     }
 
     /// <summary>
