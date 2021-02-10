@@ -49,13 +49,31 @@ properties = PoolStringArray( "_activeStateName" )
 position = Vector2( -258.166, -686.946 )
 
 [node name="HookTarget" parent="Level01" instance=ExtResource( 2 )]
-position = Vector2( 1490.63, 1643.28 )
+position = Vector2( 1510.79, 1716.36 )
+
+[node name="HookTarget7" parent="Level01" instance=ExtResource( 2 )]
+position = Vector2( 1001.39, 1289.74 )
+
+[node name="HookTarget9" parent="Level01" instance=ExtResource( 2 )]
+position = Vector2( 1161.34, 1519.04 )
+
+[node name="HookTarget10" parent="Level01" instance=ExtResource( 2 )]
+position = Vector2( 1090.9, 1395.68 )
+
+[node name="HookTarget8" parent="Level01" instance=ExtResource( 2 )]
+position = Vector2( 1219.36, 1646.23 )
 
 [node name="HookTarget2" parent="Level01" instance=ExtResource( 2 )]
-position = Vector2( 1863.29, 1584.92 )
+position = Vector2( 1722.18, 1582.4 )
+
+[node name="HookTarget11" parent="Level01" instance=ExtResource( 2 )]
+position = Vector2( 2047.24, 1596.26 )
 
 [node name="HookTarget3" parent="Level01" instance=ExtResource( 2 )]
-position = Vector2( 2945.34, 1158.38 )
+position = Vector2( 2960.46, 1024.83 )
+
+[node name="HookTarget12" parent="Level01" instance=ExtResource( 2 )]
+position = Vector2( 2892.42, 1192.4 )
 
 [node name="HookTarget4" parent="Level01" instance=ExtResource( 2 )]
 position = Vector2( 3160.85, 754.295 )

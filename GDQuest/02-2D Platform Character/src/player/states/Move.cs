@@ -21,6 +21,8 @@ public class Move : Node, IState
 
     public bool isMoving = false;
 
+    private Hook _hook;
+
 #endregion
 
 //*-------------------------------------------------------------------------*//
@@ -29,6 +31,8 @@ public class Move : Node, IState
 
     public override void _Ready()
     {
+        _hook = (Hook)Utils.StateMachine_Hook.RootNode;
+
         MaxSpeed = MaxSpeed_Default;
 
         Acceleration_Default = new Vector2(Inertia_Start, Gravity);
@@ -46,10 +50,14 @@ public class Move : Node, IState
 #region INTERFACE IMPLEMENTATION
 
     public void Enter_State(Godot.Collections.Dictionary<string, object> pParam)
-    { }
+    {
+        _hook.Connect("HookedOntoTarget", this, nameof(_onHook_HookedOntoTarget));
+    }
 
     public void Exit_State()
-    { }
+    {
+        _hook.Disconnect("HookedOntoTarget", this, nameof(_onHook_HookedOntoTarget));
+    }
 
     public void Update(float delta)
     { }
@@ -76,6 +84,23 @@ public class Move : Node, IState
 //*-------------------------------------------------------------------------*//
 
 #region SIGNAL CALLBACKS
+
+    public void _onHook_HookedOntoTarget(Vector2 pTargetGlobalPosition)
+    {
+        Vector2 to_target = pTargetGlobalPosition - _hook.GlobalPosition;
+
+        // Check if the player is on the floor and the target bellow the character
+        if (Utils.StateMachine_Player.RootNode.IsOnFloor() && to_target.y > 0.0f)
+            return;
+
+        // Change the state
+        Godot.Collections.Dictionary<string,object> param = new Godot.Collections.Dictionary<string,object>();
+        param.Add("target_global_position", pTargetGlobalPosition);
+        param.Add("velocity", Velocity);
+
+        _hook.Arrow.HookPosition = pTargetGlobalPosition;
+        Utils.StateMachine_Player.TransitionTo("Hook", param);
+    }
 
 #endregion
 

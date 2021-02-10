@@ -19,17 +19,6 @@ public class Aim : Node, IState
         _hook = (Hook)Owner;
     }
 
-    /*
-        public override void Physics_Update(float delta)
-        {
-
-    -> 5 min 15
-
-            Vector2 cast = Utils.GetDirectionBetween2Objects(Utils.StateMachine_Hook.RootNode.GlobalPosition, GetViewport().GetMousePosition());
-            cast *= 
-        }
-    */
-
 #endregion
 
 //*-------------------------------------------------------------------------*//
@@ -43,12 +32,27 @@ public class Aim : Node, IState
     {}
 
     public void Input_State(InputEvent @event)
-    {}
+    {
+        if (@event.IsActionPressed("hook") && _hook.CanHook())
+        {
+            Utils.StateMachine_Hook.TransitionTo("Aim/Fire", Utils.StateMachine_Hook.TransitionToParam_Void);
+        }
+    }
 
     public void Physics_Update(float delta)
     {
-        GD.Print(_hook.isActive);
+        // Project a raycast to see if there is an obstacle (eg : a wall) between the player and the point to hook
+        Vector2 cast = _hook.GetAimDirection() * _hook.Raycast.CastTo.Length();
 
+        // Update the angle towards the target
+        float angle = cast.Angle();
+
+        // Set the new direction and rotate the arrow towards the target
+        _hook.Raycast.CastTo = cast;
+        _hook.Arrow.Rotation = angle;
+        _hook.SnapDetector.Rotation = angle;
+
+        _hook.Raycast.ForceRaycastUpdate();
     }
 
     public void Update(float delta)

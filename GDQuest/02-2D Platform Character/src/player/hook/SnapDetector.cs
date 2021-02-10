@@ -1,22 +1,23 @@
 using Godot;
-using System;
 
 public class SnapDetector : Area2D
 {
 #region HEADER
 
-    //[Export] private int Value = 0;
+    public HookTarget Target {
+        get => _target;
+        set {
+            _target = value;
+            _hookingHint.Visible = HasTarget();
 
-    //[Signal] private delegate void MySignal(bool value1, int value2);
+            _hookingHint.GlobalPosition = _target != null ? _target.GlobalPosition : _hookingHint.GlobalPosition;
+        }
+    }
 
-    //Enums
-    //public enum Borders { Left, Right, Top, Bottom }
+    private Position2D _hookingHint;
+    private RayCast2D _raycast;
 
-    //Public
-    //public int value1 = 0;
-
-    //Private
-    //private int _value2 = 0;
+    private HookTarget _target;
 
 #endregion
 
@@ -24,44 +25,19 @@ public class SnapDetector : Area2D
 
 #region GODOT METHODS
 
-    // A constructor replace the _init() method in GDScript ("Called when the engine creates object in memory")
-    //public SnapDetector()
-    //{}
-
     // Called when the node enters the scene tree for the first time
-    //public override void _Ready()
-    //{}
-
-    // To draw custom nodes (primitives ...). Called once, then draw commands are cached.
-    // Use Update(); in _Process() to call _Draw() every frame
-    //   All draw* shapes : https://docs.godotengine.org/en/stable/classes/class_canvasitem.html#class-canvasitem
-    //public override void _Draw()
-    //{}
-
-    //public override void _Process(float delta)
-    //{}
-
-    //public override void _PhysicsProcess(float delta)
-    //{}
-
-    // Use to add warning in the Editor   (must add the [Tool] attribute on the class)
-    //public override string _GetConfigurationWarning()
-    //{ return "Add your warning message here"; }
-
-    // Use to detect a key not defined in the Input Manager  (called only when a touch is pressed or released - not suitable for long press like run button)
-    // Note : it's cleaner to define key in the Input Manager and use  Input.IsActionPressed("myaction")   in  _Process
-    /*public override void _UnhandledInput(InputEvent @event)
+    public override void _Ready()
     {
-        if (@event is InputEventKey eventKey)
-        {
-            // Close game if press Escape
-            if (eventKey.Pressed && eventKey.Scancode == (int)KeyList.Escape)
-            {
-                GetTree().Quit();
-                //_sceneTree.SetInputAsHandled();   // If uncommented, all eventKey conditions below will not be tested (usefull for a Pause)
-            }
-        }
-    }*/
+        _hookingHint = GetNode<Position2D>("HookingHint");
+        _raycast = GetNode<RayCast2D>("RayCast2D");
+
+        _raycast.SetAsToplevel(true);
+    }
+
+    public override void _PhysicsProcess(float delta)
+    {
+        Target = FindBestTarget();
+    }
 
 #endregion
 
@@ -74,6 +50,41 @@ public class SnapDetector : Area2D
 //*-------------------------------------------------------------------------*//
 
 #region USER METHODS
+
+    public bool HasTarget()
+    {
+        return Target != null;
+    }
+
+    /// <summary>
+    /// Get the closest HookTarget (hook objects in the Game scene)
+    /// </summary>
+    /// <returns></returns>
+    public HookTarget FindBestTarget()
+    {
+        HookTarget closestTarget = null;
+
+        // Get a list of all targets inside the collision shape (collision mask set only on HookTargets in the Editor)
+        Godot.Collections.Array targets = GetOverlappingAreas();
+        foreach (HookTarget target in targets)
+        {
+            if (!target.isActive)
+                continue;       // go directly to the next 'target' in the foreach
+
+            // Check if there is no obstacle to the target
+            _raycast.GlobalPosition = GlobalPosition;
+            _raycast.CastTo = target.GlobalPosition - _raycast.GlobalPosition;
+            //_raycast.ForceUpdateTransform();
+            if (_raycast.IsColliding())
+                continue;
+
+            // Get the target
+            closestTarget = target;
+            break;
+        }
+
+        return closestTarget;
+    }
 
 #endregion
 }

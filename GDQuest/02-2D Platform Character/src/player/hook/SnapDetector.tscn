@@ -1,6 +1,23 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://src/player/hook/SnapDetector.cs" type="Script" id=1]
+[ext_resource path="res://src/player/hook/HookingHint.cs" type="Script" id=2]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 67.2306
+height = 70.2741
 
 [node name="SnapDetector" type="Area2D"]
 script = ExtResource( 1 )
+
+[node name="HookingHint" type="Position2D" parent="."]
+script = ExtResource( 2 )
+InnerColor = Color( 1, 0.0941176, 0, 1 )
+
+[node name="CapsuleV" type="CollisionShape2D" parent="."]
+position = Vector2( 113.622, 0 )
+shape = SubResource( 1 )
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+modulate = Color( 0.972549, 0.0823529, 0.0823529, 1 )
+cast_to = Vector2( 70, 0 )

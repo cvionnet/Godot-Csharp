@@ -5,13 +5,14 @@ public class Hook : Position2D
 {
 #region HEADER
 
-//    public bool isActive = true;
+    [Signal] private delegate void HookedOntoTarget(Vector2 targetGlobalPosition);
+
     public bool isActive { get; set; } = true;
 
-    private RayCast2D _raycast;
-    private Node2D _arrow;
-    private Area2D _snapDetector;
-    private Timer _coolDownTimer;
+    public RayCast2D Raycast;
+    public Arrow Arrow;
+    public SnapDetector SnapDetector;
+    public Timer CoolDownTimer;
 
 #endregion
 
@@ -22,10 +23,10 @@ public class Hook : Position2D
     // Called when the node enters the scene tree for the first time
     public override void _Ready()
     {
-        _raycast = GetNode<RayCast2D>("RayCast2D");
-        _arrow = GetNode<Node2D>("Arrow");
-        _snapDetector = GetNode<Area2D>("SnapDetector");
-        _coolDownTimer = GetNode<Timer>("Cooldown");
+        Raycast = GetNode<RayCast2D>("RayCast2D");
+        Arrow = GetNode<Arrow>("Arrow");
+        SnapDetector = GetNode<SnapDetector>("SnapDetector");
+        CoolDownTimer = GetNode<Timer>("Cooldown");
     }
 
 #endregion
@@ -44,19 +45,18 @@ public class Hook : Position2D
     /// Get a True if the hook is active
     /// </summary>
     /// <returns>A boolean</returns>
-/*
     public bool CanHook()
     {
-        return isActive && _snapDetector.HasTarget() && _coolDownTimer.IsStopped();
+        return isActive && SnapDetector.HasTarget() && CoolDownTimer.IsStopped();
     }
-*/
+
     /// <summary>
-    /// Get the direction between 2 objects (eg : pActualPosition can be the player)
+    /// Get the direction between the hook and the mouse cursor
     /// </summary>
     /// <returns>A Vector2 to represent the direction</returns>
     public Vector2 GetAimDirection()
     {
-        return Utils.GetDirectionBetween2Objects(GlobalPosition, GetGlobalMousePosition());
+        return Utils.GetDirectionBetween_2_Objects(GlobalPosition, GetGlobalMousePosition());
     }
 
 #endregion
