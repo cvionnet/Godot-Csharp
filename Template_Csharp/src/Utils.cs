@@ -74,6 +74,47 @@ public static class Utils
 
 #endregion
 
+#region METHODS - MATHS
+
+    /// <summary>
+    /// Get the direction vector between 2 objects
+    /// </summary>
+    /// <param name="pActualPosition">A vector2 representing the 1st object (eg : the player.GlobalPosition)</param>
+    /// <param name="pTargetPosition">A vector2 representing the 2nd object (eg : the enemy.GlobalPosition)</param>
+    /// <param name="pNormalize">set to True to return a normalized vector</param>
+    /// <returns>A Vector2 to represent the direction</returns>
+    public static Vector2 GetDirectionBetween_2_Objects(Vector2 pActualPosition, Vector2 pTargetPosition, bool pNormalize = true)
+    {
+        //Vector2 direction = VECTOR_0;
+        Vector2 direction = pNormalize ? (pTargetPosition - pActualPosition).Normalized() : (pTargetPosition - pActualPosition);
+        return direction;
+    }
+
+    /// <summary>
+    /// Get the distance between 2 objects
+    /// </summary>
+    /// <param name="pActualPosition">A vector2 representing the 1st object (eg : the player.GlobalPosition)</param>
+    /// <param name="pTargetPosition">A vector2 representing the 2nd object (eg : the enemy.GlobalPosition)</param>
+    /// <returns>A float to represent the distance</returns>
+    public static float GetDistanceBetween_2_Objects(Vector2 pActualPosition, Vector2 pTargetPosition)
+    {
+        return (pTargetPosition - pActualPosition).Length();
+    }
+
+    /// <summary>
+    /// Get the angle between 2 objects
+    /// </summary>
+    /// <param name="pActualPosition">A vector2 representing the 1st object (eg : the player.GlobalPosition)</param>
+    /// <param name="pTargetPosition">A vector2 representing the 2nd object (eg : the enemy.GlobalPosition)</param>
+    /// <returns>A float to represent the angle in Radians</returns>
+    public static float GetAngleTo(Vector2 pActualPosition, Vector2 pTargetPosition)
+    {
+        // Get the destination position, then the angle to the destination position
+        return (pTargetPosition - pActualPosition).Angle();
+    }
+
+#endregion
+
 #region METHODS - NODES
 
     /// <summary>
@@ -96,14 +137,14 @@ public static class Utils
 #region METHODS - PHYSICS
 
     /// <summary>
-    /// Get the direction of a character according of the inputs
+    /// Get the moving direction of a character according of the inputs
     /// Platformer : only focus on the x axis  (left/right)
     /// </summary>
     /// <param name="pMove_Left">the name of the action used in the Input Map</param>
     /// <param name="pMove_Right">the name of the action used in the Input Map</param>
     /// <param name="pNormalize">True to return a normalized vector</param>
     /// <returns>A vector2 to represent the direction of the character</returns>
-    public static Vector2 GetDirection_Platformer(string pMove_Left, string pMove_Right, bool pNormalize)
+    public static Vector2 GetMovingDirection_Platformer(string pMove_Left, string pMove_Right, bool pNormalize)
     {
         Vector2 new_velocity;
 
@@ -117,31 +158,6 @@ public static class Utils
         new_velocity = (pNormalize) ? new_velocity.Normalized() : new_velocity;
 
         return new_velocity;
-    }
-
-    /// <summary>
-    /// Get the direction between 2 objects
-    /// </summary>
-    /// <param name="pActualPosition">A vector2 representing the 1st object (eg : the player.GlobalPosition)</param>
-    /// <param name="pTargetPosition">A vector2 representing the 2nd object (eg : the enemy.GlobalPosition)</param>
-    /// <param name="pNormalize">set to True to return a normalized vector</param>
-    /// <returns>A Vector2 to represent the direction</returns>
-    public static Vector2 GetDirectionBetween_2_Objects(Vector2 pActualPosition, Vector2 pTargetPosition, bool pNormalize = true)
-    {
-        //Vector2 direction = VECTOR_0;
-        Vector2 direction = pNormalize ? (pTargetPosition - pActualPosition).Normalized() : (pTargetPosition - pActualPosition);
-        return direction;
-    }
-
-    /// <summary>
-    /// Get the distance between 2 objects
-    /// </summary>
-    /// <param name="pActualPosition">A vector2 representing the 1st object (eg : the player.GlobalPosition)</param>
-    /// <param name="pTargetPosition">A vector2 representing the 2nd object (eg : the enemy.GlobalPosition)</param>
-    /// <returns>A float to represent the distance</returns>
-    public static float GetDistanceBetween_2_Objects(Vector2 pActualPosition, Vector2 pTargetPosition)
-    {
-        return (pTargetPosition - pActualPosition).Length();
     }
 
     /// <summary>
@@ -169,6 +185,7 @@ public static class Utils
         {
             new_velocity.x += pDirection.x * pAcceleration.x * delta;
         }
+        // Else we calculate the decceleration
         else if (pDirection.x == 0.0f && Mathf.Abs(new_velocity.x) > 0.2f)
         {
             // Read the direction from velocity (can be positive or negative)

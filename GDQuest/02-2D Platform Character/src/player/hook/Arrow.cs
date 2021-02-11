@@ -11,11 +11,10 @@ public class Arrow : Node2D
             _hookPosition = value;
 
             // Get the destination position
-            Vector2 toTarget = _hookPosition - GlobalPosition;
-            Length = toTarget.Length();
+            Length = Utils.GetDistanceBetween_2_Objects(GlobalPosition, _hookPosition);
 
             // Angle to the target position
-            Rotation = toTarget.Angle();
+            Rotation = Utils.GetAngleTo(GlobalPosition, _hookPosition);
 
             // Animate the hook to go back to the start position
             _tween.InterpolateProperty(this, "Length", _length, _startLength, 0.25f, Tween.TransitionType.Quad, Tween.EaseType.Out);

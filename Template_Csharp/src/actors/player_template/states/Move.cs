@@ -87,7 +87,7 @@ public class Move_Template : Node, IState
     /// <param name="delta">delta time</param>
     private void _Movement_Left_Right(float delta)
     {
-        Direction = Utils.GetDirection_Platformer("L_left", "L_right", false);
+        Direction = Utils.GetMovingDirection_Platformer("L_left", "L_right", false);
 
         // Check if the player is moving
         isMoving = (Direction.x != 0.0f) ? true : false;
