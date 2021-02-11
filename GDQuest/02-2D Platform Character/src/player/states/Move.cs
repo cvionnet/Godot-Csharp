@@ -86,7 +86,7 @@ public class Move : Node, IState
 
 #region SIGNAL CALLBACKS
 
-    public void _onHook_HookedOntoTarget(Vector2 pTargetGlobalPosition)
+    public void _onHook_HookedOntoTarget(Vector2 pTargetGlobalPosition, float power)
     {
         Vector2 to_target = pTargetGlobalPosition - Hook.GlobalPosition;
 
@@ -98,6 +98,7 @@ public class Move : Node, IState
         Godot.Collections.Dictionary<string,object> param = new Godot.Collections.Dictionary<string,object>();
         param.Add("target_global_position", pTargetGlobalPosition);
         param.Add("velocity", Velocity);
+        param.Add("velocity_multiplier", power);
 
         Hook.Arrow.HookPosition = pTargetGlobalPosition;
         Utils.StateMachine_Player.TransitionTo("Hook", param);

@@ -27,6 +27,8 @@ public class Fire : Node, IState
 
     public void Enter_State(Dictionary<string, object> pParam)
     {
+        float power = 1.0f;
+
         _hook.CoolDownTimer.Connect("timeout", this, nameof(_onCooldownTimeout));
         _hook.CoolDownTimer.Start();
 
@@ -36,7 +38,11 @@ public class Fire : Node, IState
             _hook.Arrow.HookPosition = target.GlobalPosition;
             target.HookedFrom(_hook.GlobalPosition);
 
-            _hook.EmitSignal("HookedOntoTarget", target.GlobalPosition);
+            // (from Charge state)
+            if (pParam.ContainsKey("velocity_multiplier"))
+                power = (float)pParam["velocity_multiplier"];
+
+            _hook.EmitSignal("HookedOntoTarget", target.GlobalPosition, power);
         }
     }
 

@@ -10,6 +10,7 @@ public class Hook_state : Node, IState
 
     private Vector2 _target_GlobalPosition = Utils.VECTOR_INF;
     private Vector2 _velocity = Utils.VECTOR_0;
+    private float _velocity_multiplier = 0.0f;
 
 #endregion
 
@@ -30,6 +31,9 @@ public class Hook_state : Node, IState
 
         if (pParam.ContainsKey("velocity"))
             _velocity = (Vector2)pParam["velocity"];
+
+        if (pParam.ContainsKey("velocity_multiplier"))
+            _velocity_multiplier = (float)pParam["velocity_multiplier"];
     }
 
     public void Exit_State()
@@ -45,7 +49,7 @@ public class Hook_state : Node, IState
     public void Physics_Update(float delta)
     {
         // Use Steering Behaviour to "move" the player to the hook, adding a pushing force when he arrive on it
-        _velocity = Utils.Steering_Seek(_velocity, Utils.StateMachine_Player.RootNode.GlobalPosition, _target_GlobalPosition, HookMaxSpeed);
+        _velocity = Utils.Steering_Seek(_velocity, Utils.StateMachine_Player.RootNode.GlobalPosition, _target_GlobalPosition, HookMaxSpeed * _velocity_multiplier);
         _velocity = (_velocity.Length() > PushWhenArrive) ? _velocity : _velocity.Normalized() * PushWhenArrive;
 
         _velocity = Utils.StateMachine_Player.RootNode.MoveAndSlide(_velocity, Utils.VECTOR_FLOOR);

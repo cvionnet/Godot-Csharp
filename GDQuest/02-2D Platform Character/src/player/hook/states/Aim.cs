@@ -35,7 +35,8 @@ public class Aim : Node, IState
     {
         if (@event.IsActionPressed("hook") && _hook.CanHook())
         {
-            Utils.StateMachine_Hook.TransitionTo("Aim/Fire", Utils.StateMachine_Hook.TransitionToParam_Void);
+            //Utils.StateMachine_Hook.TransitionTo("Aim/Fire", Utils.StateMachine_Hook.TransitionToParam_Void);
+            Utils.StateMachine_Hook.TransitionTo("Aim/Charge", Utils.StateMachine_Hook.TransitionToParam_Void);
         }
     }
 

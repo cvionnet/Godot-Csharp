@@ -32,11 +32,11 @@ public class Arrow : Node2D
             _tail.SetPointPosition(_tail.Points.Length-1, new Vector2(_length, 0.0f));
 
             // Move the head position
-            _head.Position = new Vector2(_tail.Points[_tail.Points.Length-1].x + _tail.Position.x , _head.Position.y);
+            Head.Position = new Vector2(_tail.Points[_tail.Points.Length-1].x + _tail.Position.x , Head.Position.y);
         }
     }
 
-    private Sprite _head;
+    public Sprite Head;
     private Line2D _tail;
     private Tween _tween;
 
@@ -52,13 +52,13 @@ public class Arrow : Node2D
     // Called when the node enters the scene tree for the first time
     public override void _Ready()
     {
-        _head = GetNode<Sprite>("Head");
+        Head = GetNode<Sprite>("Head");
         _tail = GetNode<Line2D>("Tail");
         _tween = GetNode<Tween>("Tween");
 
         HookPosition = Utils.VECTOR_0;
         Length = 35.0f;
-        _startLength = _head.Position.x - (_head.Texture.GetWidth()/2 * _head.Scale.x) + 4.0f;    // 4.0f is a offset
+        _startLength = Head.Position.x - (Head.Texture.GetWidth()/2 * Head.Scale.x) + 4.0f;    // 4.0f is a offset
     }
 
 #endregion

@@ -5,7 +5,7 @@ public class Hook : Position2D
 {
 #region HEADER
 
-    [Signal] private delegate void HookedOntoTarget(Vector2 targetGlobalPosition);
+    [Signal] private delegate void HookedOntoTarget(Vector2 targetGlobalPosition, float power);
 
     public bool isActive { get; set; } = true;
 
