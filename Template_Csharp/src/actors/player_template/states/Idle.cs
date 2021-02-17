@@ -5,7 +5,7 @@ public class Idle_Template : Node, IState
 {
 #region HEADER
 
-    private Move _moveNode;
+    private Move_Template _moveNode;
 
 #endregion
 
@@ -15,7 +15,7 @@ public class Idle_Template : Node, IState
 
     public override void _Ready()
     {
-        _moveNode = GetParent<Move>();
+        _moveNode = GetParent<Move_Template>();
     }
 
 #endregion
@@ -47,10 +47,10 @@ public class Idle_Template : Node, IState
         _moveNode.Physics_Update(delta);
 
         // Conditions of transition to Run or Air states
-        if (Utils.StateMachine_Player.RootNode.IsOnFloor() && _moveNode.isMoving)
-            Utils.StateMachine_Player.TransitionTo("Move/Run", Utils.StateMachine_Player.TransitionToParam_Void);
-        else if (!Utils.StateMachine_Player.RootNode.IsOnFloor())
-            Utils.StateMachine_Player.TransitionTo("Move/Air", Utils.StateMachine_Player.TransitionToParam_Void);
+        if (Utils.StateMachine_Template.RootNode.IsOnFloor() && _moveNode.isMoving)
+            Utils.StateMachine_Template.TransitionTo("Move/Run", Utils.StateMachine_Template.TransitionToParam_Void);
+        else if (!Utils.StateMachine_Template.RootNode.IsOnFloor())
+            Utils.StateMachine_Template.TransitionTo("Move/Air", Utils.StateMachine_Template.TransitionToParam_Void);
     }
 
     public void Input_State(InputEvent @event)

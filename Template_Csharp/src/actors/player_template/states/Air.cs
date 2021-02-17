@@ -9,7 +9,7 @@ public class Air_Template : Node, IState
     [Export] public float JumpImpulse = 900.0f;
     [Export] public int Jump_Max_Count = 2;
 
-    private Move _moveNode;
+    private Move_Template _moveNode;
     private int _jumpCount = 0;
 
 #endregion
@@ -20,7 +20,7 @@ public class Air_Template : Node, IState
 
     public override void _Ready()
     {
-        _moveNode = GetParent<Move>();
+        _moveNode = GetParent<Move_Template>();
     }
 
 #endregion
@@ -70,11 +70,11 @@ public class Air_Template : Node, IState
         _moveNode.Physics_Update(delta);
 
         // Conditions of transition to Idle or Run states
-        if (Utils.StateMachine_Player.RootNode.IsOnFloor())
+        if (Utils.StateMachine_Template.RootNode.IsOnFloor())
         {
             // _moveNode.Velocity.Length() : to deal with deceleration (force the character to stop when his velocity is close to 0)
             string target_state = (_moveNode.isMoving && _moveNode.Velocity.Length() < 1.0f) ? "Move/Idle" : "Move/Run";
-            Utils.StateMachine_Player.TransitionTo(target_state, Utils.StateMachine_Player.TransitionToParam_Void);
+            Utils.StateMachine_Template.TransitionTo(target_state, Utils.StateMachine_Template.TransitionToParam_Void);
         }
     }
 
