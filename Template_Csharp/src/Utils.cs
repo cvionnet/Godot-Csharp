@@ -7,6 +7,8 @@ public static class Utils
 {
 #region VARIABLES
 
+    public const bool DEBUG_MODE = true;
+
     public static float ScreenWidth;
     public static float ScreenHeight;
 
@@ -38,6 +40,18 @@ public static class Utils
 
 		ScreenWidth = pGame.Size.x;
 		ScreenHeight = pGame.Size.y;
+
+        DebugPrint("-> Screen size = " + ScreenWidth + " / " + ScreenHeight);
+    }
+
+    /// <summary>
+    /// To display a text in the Editor's debug panel ONLY if DEBUG_MODE = true
+    /// </summary>
+    /// <param name="pText">The text to display</param>
+    public static void DebugPrint(string pText)
+    {
+        if (DEBUG_MODE)
+            GD.Print(pText);
     }
 
     /// <summary>
