@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/spawn_factory/Spawn_Factory.cs" type="Script" id=1]
+
+[node name="Spawn_Factory" type="Position2D"]
+self_modulate = Color( 0.862745, 0.0627451, 0.0627451, 1 )
+script = ExtResource( 1 )
