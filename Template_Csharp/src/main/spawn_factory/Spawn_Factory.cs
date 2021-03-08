@@ -68,11 +68,11 @@ public class Spawn_Timing
 ///             option 2 : add more than 1 Spawn_Factory scene in the main scene
 ///                             mySpawnFactory1.Load_NewScene("res://src/spawn_factory/spawn_objects/SpawnObject.tscn");
 ///                             mySpawnFactory2.Load_NewScene("res://src/spawn_factory/spawn_objects/SpawnObject2.tscn");
+///     - ⚠️ edit/add the Add_Instance() method to replace "SpawnObject" by the scene instance(s) to create
 ///     - to create an instance, use the Add_Instance() method
 ///         - quick instance :   mySpawnFactory.Add_Instance(0, _position.GlobalPosition);
 ///         - using a Spawn_Timing object (the default empty constructor define an object that use no timing options to spawn instance)
 ///             mySpawnFactory.Add_Instance(GlobalPosition, new Spawn_Timing(true, true, true, 0.2f, 1.0f), 5, true, "enemies");
-///     - ⚠️ edit/add the Add_Instance() method to replace "SpawnObject" by the scene instance(s) to create
 /// </summary>
 public class Spawn_Factory : Position2D
 {
@@ -109,21 +109,23 @@ public class Spawn_Factory : Position2D
     /// <summary>
     /// Spawn a single intance of the index of the PackedScene's list
     /// </summary>
-    /// <param name="pIndexScene">The index of the PackedScene to add</param>
+    /// <param name="pIndexSceneToDisplay">The index of the PackedScene to add</param>
     /// <param name="pGlobalPosition">Where to display the scene spawned</param>
     /// <param name="pGroupName">Name of the group the instance will belong</param>
-    public void Add_Instance(int pIndexScene, Vector2 pGlobalPosition, string pGroupName="")
+//👉 TODO: "SpawnObject" : replace this by the scene you want to instance
+    public SpawnObject Add_Instance(int pIndexSceneToDisplay, Vector2 pGlobalPosition, string pGroupName="")
     {
-        if(ListScenes == null || ListScenes.Count == 0 || ListScenes[pIndexScene] == null)
+        if(ListScenes == null || ListScenes.Count == 0 || ListScenes[pIndexSceneToDisplay] == null)
             return;
 
-        PackedScene scene = ListScenes[pIndexScene];
+        PackedScene scene = ListScenes[pIndexSceneToDisplay];
 
         // Instance
         //👉 "SpawnObject" : replace this by the scene you want to instance
+        SpawnObject instance;
         if (scene.Instance().GetType() == typeof(SpawnObject))
         {
-            SpawnObject instance = (SpawnObject)scene.Instance();
+            instance = (SpawnObject)scene.Instance();
             AddChild(instance);
 
             instance.GlobalPosition = pGlobalPosition;
@@ -132,7 +134,10 @@ public class Spawn_Factory : Position2D
         else
         {
             GD.Print("TODO: ERROR - Class " + scene.Instance().GetType() + " is not defined in 'Add_Instance'");
+            instance = null;
         }
+
+        return instance;
     }
 
     /// <summary>
