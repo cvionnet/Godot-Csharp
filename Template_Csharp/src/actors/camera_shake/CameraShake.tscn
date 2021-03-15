@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://src/actors/CameraShake.cs" type="Script" id=1]
+
+[sub_resource type="OpenSimplexNoise" id=1]
+
+[node name="CameraShake" type="Camera2D"]
+current = true
+drag_margin_h_enabled = true
+drag_margin_v_enabled = true
+smoothing_enabled = true
+smoothing_speed = 3.0
+script = ExtResource( 1 )
+Noise = SubResource( 1 )
+
+[node name="Flash" type="ColorRect" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+margin_left = -513.0
+margin_top = -303.0
+margin_right = 512.0
+margin_bottom = 301.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ShakeLength" type="Timer" parent="."]
+one_shot = true
+
+[node name="Tween" type="Tween" parent="."]
