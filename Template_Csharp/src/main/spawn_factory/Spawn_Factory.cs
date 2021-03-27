@@ -1,5 +1,6 @@
 using Godot;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 /// <summary>
 /// A class to define timing options to apply to spawn an instance
@@ -61,13 +62,21 @@ public class Spawn_Timing
 ///     - ⚠️ the scene that will be instancied must have a script attached
 ///     - in the main scene, add a Spawn_Factory scene
 ///     - to load existing scene to instanciate, use the Load_NewScene() method
-///         - 👉 to spawn different objects  (from the main)
+///         - 👉 to spawn different objects
+///             In the main _Ready(),  add a _Initialize_Game() method (and put all call to Load_NewScene inside)
+///
 ///             option 1 : load more than 1 scene using Load_NewScene() method
 ///                             mySpawnFactory.Load_NewScene("res://src/spawn_factory/spawn_objects/SpawnObject.tscn");
 ///                             mySpawnFactory.Load_NewScene("res://src/spawn_factory/spawn_objects/SpawnObject2.tscn");
+///
 ///             option 2 : add more than 1 Spawn_Factory scene in the main scene
 ///                             mySpawnFactory1.Load_NewScene("res://src/spawn_factory/spawn_objects/SpawnObject.tscn");
 ///                             mySpawnFactory2.Load_NewScene("res://src/spawn_factory/spawn_objects/SpawnObject2.tscn");
+///
+///             option 3 : to use the async / await version
+///                         in the main :   async void _Initialize_Game()
+///                             SpawnObject instance = await mySpawnFactory.Load_NewScene("res://src/spawn_factory/spawn_objects/SpawnObject.tscn");
+///
 ///     - ⚠️ edit/add the Add_Instance() method to replace "SpawnObject" by the scene instance(s) to create
 ///     - to create an instance, use the Add_Instance() method
 ///         - quick instance :   mySpawnFactory.Add_Instance(0, _position.GlobalPosition);
@@ -107,7 +116,7 @@ public class Spawn_Factory : Position2D
     }
 
     /// <summary>
-    /// Spawn a single intance of the index of the PackedScene's list
+    /// Spawn a single instance of the index of the PackedScene's list
     /// </summary>
     /// <param name="pIndexSceneToDisplay">The index of the PackedScene to add</param>
     /// <param name="pGlobalPosition">Where to display the scene spawned</param>
@@ -141,17 +150,18 @@ public class Spawn_Factory : Position2D
     }
 
     /// <summary>
-    /// Spawn a new intance of the PackedScene
+    /// Spawn a new instance of the PackedScene  (using async / await)
     /// </summary>
     /// <param name="pGlobalPosition">Where to display the scene spawned</param>
     /// <param name="pTiming">A Spawn_Timing object to define timing options</param>
     /// <param name="pSpawnNumber">How many instance to create</param>
     /// <param name="pRandomInstance">If true, get a random scene from the scenes loaded in Load_NewScene() method. Else, load scene in the same order</param>
     /// <param name="pGroupName">Name of the group the instance will belong</param>
-    async public void Add_Instance(Vector2 pGlobalPosition, Spawn_Timing pTiming, int pSpawnNumber=1, bool pRandomInstance=false, string pGroupName="")
+//👉 TODO: "SpawnObject" : replace this by the scene you want to instance
+    async public Task<SpawnObject> Add_Instance(Vector2 pGlobalPosition, Spawn_Timing pTiming, int pSpawnNumber=1, bool pRandomInstance=false, string pGroupName="")
     {
         if(ListScenes == null || ListScenes.Count == 0)
-            return;
+            return null;
 
         int scene_id = 0;
 
@@ -159,13 +169,14 @@ public class Spawn_Factory : Position2D
         float spawn_time = pTiming.GetTiming();
 
         // Create the instance
+        SpawnObject instance = null;
         for (int i = 0; i < pSpawnNumber; i++)
         {
             // Timing : apply if exists
             if(pTiming.IsTimed)
                 await ToSignal(GetTree().CreateTimer(spawn_time), "timeout");
 
-            Add_Instance(scene_id, pGlobalPosition, pGroupName);
+            instance = Add_Instance(scene_id, pGlobalPosition, pGroupName);
 
             // Timing : get a new random timing for the next instance if needed
             if (pTiming.IsRandomTimePerSpawn)
@@ -177,6 +188,8 @@ public class Spawn_Factory : Position2D
             else if (ListScenes.Count > 1)
                 scene_id = (scene_id < ListScenes.Count-1) ? scene_id+1 : 0;
         }
+
+        return instance;
     }
 
 #endregion
