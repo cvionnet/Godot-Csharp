@@ -21,8 +21,9 @@ public static class Utils
 
     public static RandomNumberGenerator Rnd = new RandomNumberGenerator();
 
-    // References to state machines
+    // References to state machines & StateManager
     public static StateMachine_Template StateMachine_Template { get; set; }
+    public static StateManager State_Manager;
 
 #endregion
 
