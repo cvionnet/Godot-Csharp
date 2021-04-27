@@ -128,6 +128,24 @@ public static class Utils
         return (pTargetPosition - pActualPosition).Angle();
     }
 
+    /// <summary>
+    /// Get the centered position of any set of sprites     Eg : get the center position of a grid made from multiple cells
+    /// </summary>
+    /// <param name="pTotalWidth">The total width of the set</param>
+    /// <param name="pTotalHeight">The total height of the set</param>
+    /// <param name="pUniqueElementSize">the size of an unique element of the set</param>
+    /// <param name="pDestinationPosition">the point where the set will be displayed (typically Utils.VECTOR_0   or  GlobalPosition)</param>
+    /// <returns>A vector to represent the centered coordinates</returns>
+    public static Vector2 Get_CenteredPosition(float pTotalWidth, float pTotalHeight, float pUniqueElementSize, Vector2 pDestinationPosition)
+    {
+        // Get the centered position
+        float x = pUniqueElementSize - (pUniqueElementSize / 2) - (pTotalWidth / 2);
+        float y = pUniqueElementSize - (pTotalHeight / 2);
+
+        // Add the destination point
+        return new Vector2(x + pDestinationPosition.x, y + pDestinationPosition.y);
+    }
+
 #endregion
 
 #region METHODS - NODES

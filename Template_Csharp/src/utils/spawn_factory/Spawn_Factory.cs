@@ -57,11 +57,11 @@ public class Spawn_Factory : Position2D
     /// <summary>
     /// Spawn a single instance of the index of the PackedScene's list   (scene must ihnerits from Node2D)
     /// </summary>
-    /// <param name="pGlobalPosition">Where to display the scene spawned</param>
+    /// <param name="pGlobalPosition">Where to display the scene spawned (null = do not use set a position)</param>
     /// <param name="pIndexSceneToDisplay">The index of the PackedScene to display (0 by default) </param>
     /// <param name="pGroupName">Name of the group the instance will belong ("" by default)</param>
     /// <returns>An instance of the scene</returns>
-    public T Add_Instance<T>(Vector2 pGlobalPosition, int pIndexSceneToDisplay=0, string pGroupName="") where T:Node2D
+    public T Add_Instance<T>(Vector2? pGlobalPosition, int pIndexSceneToDisplay=0, string pGroupName="") where T:Node2D
     {
         if(ListScenes == null || ListScenes.Count == 0 || ListScenes[pIndexSceneToDisplay] == null)
             return null;
@@ -75,7 +75,7 @@ public class Spawn_Factory : Position2D
             instance = (T)scene.Instance();
             AddChild(instance);
 
-            instance.GlobalPosition = pGlobalPosition;
+            if (pGlobalPosition != null) instance.GlobalPosition = (Vector2)pGlobalPosition;
             if(pGroupName != "") instance.AddToGroup(pGroupName);
         }
         else
@@ -90,12 +90,12 @@ public class Spawn_Factory : Position2D
     /// <summary>
     /// Spawn a single instance of the index of the PackedScene's list with a delay   (scene must ihnerits from Node2D)
     /// </summary>
-    /// <param name="pGlobalPosition">Where to display the scene spawned</param>
+    /// <param name="pGlobalPosition">Where to display the scene spawned (null = do not use set a position)</param>
     /// <param name="pTiming">A Spawn_Timing object to define timing options</param>
     /// <param name="pIndexSceneToDisplay">The index of the PackedScene to display (0 by default) </param>
     /// <param name="pGroupName">Name of the group the instance will belong ("" by default)</param>
     /// <returns>An instance of the scene</returns>
-    public async Task<T> Add_Instance_With_Delay<T>(Vector2 pGlobalPosition, Spawn_Timing pTiming, int pIndexSceneToDisplay=0, string pGroupName="") where T:Node2D
+    public async Task<T> Add_Instance_With_Delay<T>(Vector2? pGlobalPosition, Spawn_Timing pTiming, int pIndexSceneToDisplay=0, string pGroupName="") where T:Node2D
     {
         if(ListScenes == null || ListScenes.Count == 0 || ListScenes[pIndexSceneToDisplay] == null)
             return null;
@@ -112,13 +112,13 @@ public class Spawn_Factory : Position2D
     /// <summary>
     /// Spawn multiple instances from PackedScene's list with a delay   (scene must ihnerits from Node2D)
     /// </summary>
-    /// <param name="pGlobalPosition">Where to display the scene spawned</param>
+    /// <param name="pGlobalPosition">Where to display the scene spawned (null = do not use set a position)</param>
     /// <param name="pTiming">A Spawn_Timing object to define timing options</param>
     /// <param name="pSpawnNumber">How many instance to create</param>
     /// <param name="pRandomInstance">If true, get a random scene from the scenes loaded in Load_NewScene() method. Else, load scene in the same order</param>
     /// <param name="pGroupName">Name of the group the instance will belong</param>
     /// <returns>An instance of the scene</returns>
-    public async Task<T> Add_Multiple_Instances_With_Delay<T>(Vector2 pGlobalPosition, Spawn_Timing pTiming, int pSpawnNumber=1, bool pRandomInstance=false, string pGroupName="") where T:Node2D
+    public async Task<T> Add_Multiple_Instances_With_Delay<T>(Vector2? pGlobalPosition, Spawn_Timing pTiming, int pSpawnNumber=1, bool pRandomInstance=false, string pGroupName="") where T:Node2D
     {
         if(ListScenes == null || ListScenes.Count == 0 || pSpawnNumber < 1)
             return null;
@@ -163,7 +163,7 @@ public class Spawn_Timing
     /// <summary>
     /// Constructor (empty constructor : timing options are disabled)
     /// </summary>
-    /// <param name="pIsTimed"></param>
+    /// <param name="pIsTimed">Set to true to create a Spawn_Timing</param>
     /// <param name="pIsRandomTime">Use a random spawn timing ?</param>
     /// <param name="pIsRandomTimePerSpawn">Set a random spawn timing on each instance ?</param>
     /// <param name="pMinTime">Minimum time to wait before creating a new instance</param>
