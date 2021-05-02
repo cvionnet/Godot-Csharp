@@ -12,13 +12,15 @@ using System.Threading.Tasks;
 ///
 ///         3.1 only one scene ?
 ///             _spawnFactory.Load_NewScene("res://src/MyScene.tscn");
-///             type instance = _spawnFactory.Add_Instance<type>(MyPosition);
+///             type instance = _spawnFactory.Add_Instance<type>(this/null, MyPosition);
+///             OR
+///             type instance = _spawnFactory.Add_Instance<type>(this/null, null);       // to not specify a position
 ///
 ///         3.2. more than one scene ?
 ///             _spawnFactory.Load_NewScene("res://src/MyScene.tscn");
 ///             _spawnFactory.Load_NewScene("res://src/MyScene2.tscn");
 ///             FOR (_spawnFactory.ListScenes.Count)
-///                 type instance = _spawnFactory.Add_Instance<type>(MyPosition, 0);
+///                 type instance = _spawnFactory.Add_Instance<type>(this/null, MyPosition, 0);
 ///
 ///             ℹ️ another option : using multiple Spawn_Factory scenes
 ///                 _spawnFactory1.Load_NewScene("res://src/MyScene.tscn");
@@ -26,11 +28,11 @@ using System.Threading.Tasks;
 ///
 ///         3.3. to create an instance using a Spawn_Timing object :
 ///             set Initialize_Game as async           private async void Initialize_Game()
-///                 type instance = await _spawnBlocks.Add_Instance_With_Delay<type>(MyPosition, new Spawn_Timing(true, true, true, 1.0f, 2.0f));
+///                 type instance = await _spawnBlocks.Add_Instance_With_Delay<type>(this/null, MyPosition, new Spawn_Timing(true, true, true, 1.0f, 2.0f));
 ///
 ///         3.4. to create multiple instances (eg : 4) using a Spawn_Timing object :
 ///             set Initialize_Game as async           private async void Initialize_Game()
-///                 type instance = await _spawnBlocks.Add_Multiple_Instances_With_Delay<type>(MyPosition, new Spawn_Timing(true, true, true, 1.0f, 2.0f), 4);
+///                 type instance = await _spawnBlocks.Add_Multiple_Instances_With_Delay<type>(this/null, MyPosition, new Spawn_Timing(true, true, true, 1.0f, 2.0f), 4);
 /// </summary>
 public class Spawn_Factory : Position2D
 {
@@ -57,11 +59,12 @@ public class Spawn_Factory : Position2D
     /// <summary>
     /// Spawn a single instance of the index of the PackedScene's list   (scene must ihnerits from Node2D)
     /// </summary>
-    /// <param name="pGlobalPosition">Where to display the scene spawned (null = do not use set a position)</param>
+    /// <param name="pDestinationNode_Deferred">The node where to add the instance (usually THIS to use CallDeferred / NULL = do not use CallDeferred)</param>
+    /// <param name="pGlobalPosition">Where to display the scene spawned (NULL = do not use set a position)</param>
     /// <param name="pIndexSceneToDisplay">The index of the PackedScene to display (0 by default) </param>
     /// <param name="pGroupName">Name of the group the instance will belong ("" by default)</param>
     /// <returns>An instance of the scene</returns>
-    public T Add_Instance<T>(Vector2? pGlobalPosition, int pIndexSceneToDisplay=0, string pGroupName="") where T:Node2D
+    public T Add_Instance<T>(Node pDestinationNode_Deferred, Vector2? pGlobalPosition, int pIndexSceneToDisplay=0, string pGroupName="") where T:Node2D
     {
         if(ListScenes == null || ListScenes.Count == 0 || ListScenes[pIndexSceneToDisplay] == null)
             return null;
@@ -73,7 +76,10 @@ public class Spawn_Factory : Position2D
         if (scene.Instance().GetType() == typeof(T))
         {
             instance = (T)scene.Instance();
-            AddChild(instance);
+            if (pDestinationNode_Deferred == null)
+                AddChild(instance);
+            else
+                pDestinationNode_Deferred.CallDeferred("add_child", instance);
 
             if (pGlobalPosition != null) instance.GlobalPosition = (Vector2)pGlobalPosition;
             if(pGroupName != "") instance.AddToGroup(pGroupName);
@@ -88,14 +94,15 @@ public class Spawn_Factory : Position2D
     }
 
     /// <summary>
-    /// Spawn a single instance of the index of the PackedScene's list with a delay   (scene must ihnerits from Node2D)
+    /// (Use CallDeferred) Spawn a single instance of the index of the PackedScene's list with a delay   (scene must ihnerits from Node2D)
     /// </summary>
-    /// <param name="pGlobalPosition">Where to display the scene spawned (null = do not use set a position)</param>
+    /// <param name="pDestinationNode_Deferred">The node where to add the instance (usually THIS to use CallDeferred / NULL = do not use CallDeferred)</param>
+    /// <param name="pGlobalPosition">Where to display the scene spawned (NULL = do not use set a position)</param>
     /// <param name="pTiming">A Spawn_Timing object to define timing options</param>
     /// <param name="pIndexSceneToDisplay">The index of the PackedScene to display (0 by default) </param>
     /// <param name="pGroupName">Name of the group the instance will belong ("" by default)</param>
     /// <returns>An instance of the scene</returns>
-    public async Task<T> Add_Instance_With_Delay<T>(Vector2? pGlobalPosition, Spawn_Timing pTiming, int pIndexSceneToDisplay=0, string pGroupName="") where T:Node2D
+    public async Task<T> Add_Instance_With_Delay<T>(Node pDestinationNode_Deferred, Vector2? pGlobalPosition, Spawn_Timing pTiming, int pIndexSceneToDisplay=0, string pGroupName="") where T:Node2D
     {
         if(ListScenes == null || ListScenes.Count == 0 || ListScenes[pIndexSceneToDisplay] == null)
             return null;
@@ -106,19 +113,20 @@ public class Spawn_Factory : Position2D
             await ToSignal(GetTree().CreateTimer(spawn_time), "timeout");
 
         // Create and return the instance
-        return Add_Instance<T>(pGlobalPosition, pIndexSceneToDisplay, pGroupName);
+        return Add_Instance<T>(pDestinationNode_Deferred, pGlobalPosition, pIndexSceneToDisplay, pGroupName);
     }
 
     /// <summary>
-    /// Spawn multiple instances from PackedScene's list with a delay   (scene must ihnerits from Node2D)
+    /// (Use CallDeferred) Spawn multiple instances from PackedScene's list with a delay   (scene must ihnerits from Node2D)
     /// </summary>
-    /// <param name="pGlobalPosition">Where to display the scene spawned (null = do not use set a position)</param>
+    /// <param name="pDestinationNode_Deferred">The node where to add the instance (usually THIS to use CallDeferred / NULL = do not use CallDeferred)</param>
+    /// <param name="pGlobalPosition">Where to display the scene spawned (NULL = do not use set a position)</param>
     /// <param name="pTiming">A Spawn_Timing object to define timing options</param>
     /// <param name="pSpawnNumber">How many instance to create</param>
     /// <param name="pRandomInstance">If true, get a random scene from the scenes loaded in Load_NewScene() method. Else, load scene in the same order</param>
     /// <param name="pGroupName">Name of the group the instance will belong</param>
     /// <returns>An instance of the scene</returns>
-    public async Task<T> Add_Multiple_Instances_With_Delay<T>(Vector2? pGlobalPosition, Spawn_Timing pTiming, int pSpawnNumber=1, bool pRandomInstance=false, string pGroupName="") where T:Node2D
+    public async Task<T> Add_Multiple_Instances_With_Delay<T>(Node pDestinationNode_Deferred, Vector2? pGlobalPosition, Spawn_Timing pTiming, int pSpawnNumber=1, bool pRandomInstance=false, string pGroupName="") where T:Node2D
     {
         if(ListScenes == null || ListScenes.Count == 0 || pSpawnNumber < 1)
             return null;
@@ -131,7 +139,7 @@ public class Spawn_Factory : Position2D
         for (int i = 0; i < pSpawnNumber; i++)
         {
             // Create the delayed instance
-            instance = await Add_Instance_With_Delay<T>(pGlobalPosition, pTiming, scene_id, pGroupName);
+            instance = await Add_Instance_With_Delay<T>(pDestinationNode_Deferred, pGlobalPosition, pTiming, scene_id, pGroupName);
 
             // Select a random scene if needed or load the next scene in the list
             if (pRandomInstance && ListScenes.Count > 1)
