@@ -1,6 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Nucleus;
 
 /// <summary>
 /// A class to spawn new instance of a scene
@@ -143,7 +144,7 @@ public class Spawn_Factory : Position2D
 
             // Select a random scene if needed or load the next scene in the list
             if (pRandomInstance && ListScenes.Count > 1)
-                scene_id = Utils.Rnd.RandiRange(0, ListScenes.Count-1);
+                scene_id = Nucleus_Utils.Rnd.RandiRange(0, ListScenes.Count-1);
             else if (ListScenes.Count > 1)
                 scene_id = (scene_id < ListScenes.Count-1) ? scene_id+1 : 0;
         }
@@ -201,7 +202,7 @@ public class Spawn_Timing
             spawn_time = MinTime;
 
             if (IsRandomTime)
-                spawn_time = Utils.Rnd.RandfRange(MinTime, MaxTime);
+                spawn_time = Nucleus_Utils.Rnd.RandfRange(MinTime, MaxTime);
         }
 
         return spawn_time;

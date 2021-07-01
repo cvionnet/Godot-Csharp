@@ -1,4 +1,5 @@
 using Godot;
+using Nucleus;
 using System;
 
 public class Idle_Template : Node, IState
@@ -47,10 +48,10 @@ public class Idle_Template : Node, IState
         _moveNode.Physics_Update(delta);
 
         // Conditions of transition to Run or Air states
-        if (Utils.StateMachine_Template.RootNode.IsOnFloor() && _moveNode.isMoving)
-            Utils.StateMachine_Template.TransitionTo("Move/Run", Utils.StateMachine_Template.TransitionToParam_Void);
-        else if (!Utils.StateMachine_Template.RootNode.IsOnFloor())
-            Utils.StateMachine_Template.TransitionTo("Move/Air", Utils.StateMachine_Template.TransitionToParam_Void);
+        if (Nucleus_Utils.StateMachine_Template.RootNode.IsOnFloor() && _moveNode.isMoving)
+            Nucleus_Utils.StateMachine_Template.TransitionTo("Move/Run", Nucleus_Utils.StateMachine_Template.TransitionToParam_Void);
+        else if (!Nucleus_Utils.StateMachine_Template.RootNode.IsOnFloor())
+            Nucleus_Utils.StateMachine_Template.TransitionTo("Move/Air", Nucleus_Utils.StateMachine_Template.TransitionToParam_Void);
     }
 
     public void Input_State(InputEvent @event)

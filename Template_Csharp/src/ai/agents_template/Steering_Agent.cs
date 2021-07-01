@@ -1,5 +1,6 @@
 using Godot;
-using System;
+using Nucleus;
+using Nucleus.Physics;
 
 public class Steering_Agent_Template : KinematicBody2D
 {
@@ -17,8 +18,8 @@ public class Steering_Agent_Template : KinematicBody2D
     [Export] public bool IsWander = false;      // the node will follow it's own random way
 
     private Sprite _sprite;
-    private Vector2 _velocity = Utils.VECTOR_0;
-    private Vector2 _targetGlobalPosition = Utils.VECTOR_0;
+    private Vector2 _velocity = Nucleus_Utils.VECTOR_0;
+    private Vector2 _targetGlobalPosition = Nucleus_Utils.VECTOR_0;
     private Node2D _nodeToFollow;
 
     private bool _isLeader = false;
@@ -84,7 +85,7 @@ public class Steering_Agent_Template : KinematicBody2D
         if (IsLeader)
         {
             _isLeader = true;
-            Utils.LeaderToFollow = this;
+            Nucleus_Steering.LeaderToFollow = this;
         }
 
         // If a dedicated node to follow has been set
@@ -120,13 +121,13 @@ public class Steering_Agent_Template : KinematicBody2D
             _targetGlobalPosition = GetGlobalMousePosition();
         // Node follow another node : target is the node to follow and keep the distance
         else if (_isNodeFollower)
-            _targetGlobalPosition = Utils.Steering_CalculateDistanceBetweenFollowers(_nodeToFollow.GlobalPosition, GlobalPosition, Follow_Offset);
+            _targetGlobalPosition = Nucleus_Steering.Steering_CalculateDistanceBetweenFollowers(_nodeToFollow.GlobalPosition, GlobalPosition, Follow_Offset);
         // Node flee : target to run away is the leader position
         else if (_isFlee)
-            _targetGlobalPosition = Utils.LeaderToFollow.GlobalPosition;
+            _targetGlobalPosition = Nucleus_Steering.LeaderToFollow.GlobalPosition;
         // Node follow leader : target is the leader position and keep the distance
         else if (!_isFlee && !_isWander)
-            _targetGlobalPosition = Utils.Steering_CalculateDistanceBetweenFollowers(Utils.LeaderToFollow.GlobalPosition, GlobalPosition, Follow_Offset);
+            _targetGlobalPosition = Nucleus_Steering.Steering_CalculateDistanceBetweenFollowers(Nucleus_Steering.LeaderToFollow.GlobalPosition, GlobalPosition, Follow_Offset);
         // Stay at the same position
         else if (!_isWander)
             _targetGlobalPosition = GlobalPosition;
@@ -137,7 +138,7 @@ public class Steering_Agent_Template : KinematicBody2D
     /// </summary>
     private void _Wander_GetDestination()
     {
-        _targetGlobalPosition = new Vector2(Utils.Rnd.RandfRange(10.0f, GetViewport().Size.x), Utils.Rnd.RandfRange(10.0f, GetViewport().Size.y));
+        _targetGlobalPosition = new Vector2(Nucleus_Utils.Rnd.RandfRange(10.0f, GetViewport().Size.x), Nucleus_Utils.Rnd.RandfRange(10.0f, GetViewport().Size.y));
     }
 
     /// <summary>
@@ -149,12 +150,12 @@ public class Steering_Agent_Template : KinematicBody2D
         if (_targetGlobalPosition != GlobalPosition)
         {
             if (_isFlee)
-                _velocity = Utils.Steering_Flee(_velocity, GlobalPosition, _targetGlobalPosition, MaxSpeed, FleeRadius, Mass);
+                _velocity = Nucleus_Steering.Steering_Flee(_velocity, GlobalPosition, _targetGlobalPosition, MaxSpeed, FleeRadius, Mass);
             else
-                _velocity = Utils.Steering_Seek(_velocity, GlobalPosition, _targetGlobalPosition, MaxSpeed, SlowRadius, Mass);
+                _velocity = Nucleus_Steering.Steering_Seek(_velocity, GlobalPosition, _targetGlobalPosition, MaxSpeed, SlowRadius, Mass);
 
             // Move the character
-            if (_velocity != Utils.VECTOR_0)
+            if (_velocity != Nucleus_Utils.VECTOR_0)
             {
                 _velocity = MoveAndSlide(_velocity);
                 _sprite.Rotation = _velocity.Angle();   // point the character direction towards the destination

@@ -1,4 +1,5 @@
 using Godot;
+using Nucleus;
 using System;
 
 public class Run_Template : Node, IState
@@ -48,11 +49,11 @@ public class Run_Template : Node, IState
         _moveNode.Physics_Update(delta);
 
         // Conditions of transition to Idle or Air states
-        if (Utils.StateMachine_Template.RootNode.IsOnFloor() && !_moveNode.isMoving)
-            Utils.StateMachine_Template.TransitionTo("Move/Idle", Utils.StateMachine_Template.TransitionToParam_Void);
+        if (Nucleus_Utils.StateMachine_Template.RootNode.IsOnFloor() && !_moveNode.isMoving)
+            Nucleus_Utils.StateMachine_Template.TransitionTo("Move/Idle", Nucleus_Utils.StateMachine_Template.TransitionToParam_Void);
         // _moveNode.Velocity.Length() : to deal with deceleration (force the character to stop when his velocity is close to 0)
-        else if (!Utils.StateMachine_Template.RootNode.IsOnFloor() && _moveNode.Velocity.Length() < 1.0f)
-            Utils.StateMachine_Template.TransitionTo("Move/Air", Utils.StateMachine_Template.TransitionToParam_Void);
+        else if (!Nucleus_Utils.StateMachine_Template.RootNode.IsOnFloor() && _moveNode.Velocity.Length() < 1.0f)
+            Nucleus_Utils.StateMachine_Template.TransitionTo("Move/Air", Nucleus_Utils.StateMachine_Template.TransitionToParam_Void);
     }
 
     public void Input_State(InputEvent @event)
@@ -82,7 +83,7 @@ public class Run_Template : Node, IState
     /// </summary>
     private void _Movement_Run()
     {
-        if (Utils.StateMachine_Template.RootNode.IsOnFloor() && Input.IsActionPressed("button_X"))
+        if (Nucleus_Utils.StateMachine_Template.RootNode.IsOnFloor() && Input.IsActionPressed("button_X"))
             _moveNode.MaxSpeed.x = _moveNode.MaxSpeed_Default.x + SpeedBoost;
         else
             _moveNode.MaxSpeed = _moveNode.MaxSpeed_Default;

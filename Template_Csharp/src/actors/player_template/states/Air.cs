@@ -1,4 +1,6 @@
 using Godot;
+using Nucleus;
+using Nucleus.Physics;
 using System;
 
 public class Air_Template : Node, IState
@@ -70,11 +72,11 @@ public class Air_Template : Node, IState
         _moveNode.Physics_Update(delta);
 
         // Conditions of transition to Idle or Run states
-        if (Utils.StateMachine_Template.RootNode.IsOnFloor())
+        if (Nucleus_Utils.StateMachine_Template.RootNode.IsOnFloor())
         {
             // _moveNode.Velocity.Length() : to deal with deceleration (force the character to stop when his velocity is close to 0)
             string target_state = (_moveNode.isMoving && _moveNode.Velocity.Length() < 1.0f) ? "Move/Idle" : "Move/Run";
-            Utils.StateMachine_Template.TransitionTo(target_state, Utils.StateMachine_Template.TransitionToParam_Void);
+            Nucleus_Utils.StateMachine_Template.TransitionTo(target_state, Nucleus_Utils.StateMachine_Template.TransitionToParam_Void);
         }
     }
 
@@ -108,7 +110,7 @@ public class Air_Template : Node, IState
     /// </summary>
     private void _Movement_Jump()
     {
-        _moveNode.Velocity += Utils.CalculateJumpVelocity(_moveNode.Velocity, _moveNode.MaxSpeed, JumpImpulse);
+        _moveNode.Velocity += Nucleus_Movement.CalculateJumpVelocity(_moveNode.Velocity, _moveNode.MaxSpeed, JumpImpulse);
         _jumpCount++;
     }
 

@@ -1,4 +1,5 @@
 using Godot;
+using Nucleus;
 using System;
 
 public class StateMachine_Template : StateMachine_Core
@@ -69,11 +70,11 @@ public class StateMachine_Template : StateMachine_Core
     /// </summary>
     private void _Init_StateMachine(string pGroupName)
     {
-        Node node = Utils.FindNode_BasedOnGroup(this, pGroupName);
+        Node node = Nucleus_Utils.FindNode_BasedOnGroup(this, pGroupName);
 
         if(node != null)
         {
-            Utils.StateMachine_Template = (StateMachine_Template)node;
+            Nucleus_Utils.StateMachine_Template = (StateMachine_Template)node;
             RootNode = (KinematicBody2D)Owner;
 
             base.Initialize(InitialState);

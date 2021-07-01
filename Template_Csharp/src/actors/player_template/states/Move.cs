@@ -1,4 +1,6 @@
 using Godot;
+using Nucleus;
+using Nucleus.Physics;
 using System;
 
 public class Move_Template : Node, IState
@@ -36,7 +38,7 @@ public class Move_Template : Node, IState
         Decceleration_Default = new Vector2(Inertia_Stop, 0.0f);
         Decceleration = Decceleration_Default;
 
-        Velocity = Utils.VECTOR_0;
+        Velocity = Nucleus_Utils.VECTOR_0;
     }
 
 #endregion
@@ -87,14 +89,14 @@ public class Move_Template : Node, IState
     /// <param name="delta">delta time</param>
     private void _Movement_Left_Right(float delta)
     {
-        Direction = Utils.GetMovingDirection_Platformer("L_left", "L_right", false);
+        Direction = Nucleus_Movement.GetMovingDirection_Platformer("L_left", "L_right", false);
 
         // Check if the player is moving
         isMoving = (Direction.x != 0.0f) ? true : false;
 
         // Move the player
-        Velocity = Utils.CalculateVelocity(Velocity, MaxSpeed, Acceleration, Decceleration, Direction, delta);
-        Velocity = Utils.StateMachine_Template.RootNode.MoveAndSlide(Velocity, Utils.VECTOR_FLOOR);
+        Velocity = Nucleus_Movement.CalculateVelocity(Velocity, MaxSpeed, Acceleration, Decceleration, Direction, delta);
+        Velocity = Nucleus_Utils.StateMachine_Template.RootNode.MoveAndSlide(Velocity, Nucleus_Utils.VECTOR_FLOOR);
     }
 
     /// <summary>
@@ -102,12 +104,12 @@ public class Move_Template : Node, IState
     /// </summary>
     private void _Movement_Jump(InputEvent @event)
     {
-        if (Utils.StateMachine_Template.RootNode.IsOnFloor() && @event.IsActionPressed("button_A"))
+        if (Nucleus_Utils.StateMachine_Template.RootNode.IsOnFloor() && @event.IsActionPressed("button_A"))
         {
             Godot.Collections.Dictionary<string,object> param = new Godot.Collections.Dictionary<string,object>();
             param.Add("impulse", true);
 
-            Utils.StateMachine_Template.TransitionTo("Move/Air", param);
+            Nucleus_Utils.StateMachine_Template.TransitionTo("Move/Air", param);
         }
     }
 
