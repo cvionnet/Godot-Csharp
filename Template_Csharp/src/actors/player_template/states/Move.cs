@@ -7,11 +7,11 @@ public class Move_Template : Node, IState
 {
 #region HEADER
 
-    [Export] public Vector2 MaxSpeed_Default = new Vector2(500.0f, 900.0f);
-    [Export] public float Gravity = 3000.0f;
-    [Export] public float Inertia_Start = 1200.0f;
-    [Export] public float Inertia_Stop = 1500.0f;
-    [Export] public float Fall_Speed_Max = 1500.0f;     // to make the character fall quicker (more mass)
+    [Export] public Vector2 MaxSpeed_Default = new Vector2(80.0f, 80.0f);
+    [Export] public float Inertia_Start = 120.0f;
+    [Export] public float Inertia_Stop = 150.0f;
+    [Export] public float Gravity = 0.0f;              //for platformer=3000.0f, for top-down=0.0f
+    [Export] public float Fall_Speed_Max = 0.0f;       //for platformer=1500.0f, for top-down=0.0f    // to make the character fall quicker (more mass)
 
     public Vector2 MaxSpeed;
     public Vector2 Acceleration;
@@ -23,6 +23,8 @@ public class Move_Template : Node, IState
 
     public bool isMoving = false;
 
+    private const bool IS_PLATFORMER = false;     //for platformer=true, for top-down=false
+
 #endregion
 
 //*-------------------------------------------------------------------------*//
@@ -31,11 +33,19 @@ public class Move_Template : Node, IState
 
     public override void _Ready()
     {
-        MaxSpeed = MaxSpeed_Default;
+        if(IS_PLATFORMER)
+        {
+            Acceleration_Default = new Vector2(Inertia_Start, Gravity);
+            Decceleration_Default = new Vector2(Inertia_Stop, 0.0f);
+        }
+        else
+        {
+            Acceleration_Default = new Vector2(Inertia_Start, Inertia_Start);
+            Decceleration_Default = new Vector2(Inertia_Stop, Inertia_Stop);
+        }
 
-        Acceleration_Default = new Vector2(Inertia_Start, Gravity);
+        MaxSpeed = MaxSpeed_Default;
         Acceleration = Acceleration_Default;
-        Decceleration_Default = new Vector2(Inertia_Stop, 0.0f);
         Decceleration = Decceleration_Default;
 
         Velocity = Nucleus_Utils.VECTOR_0;
@@ -58,7 +68,10 @@ public class Move_Template : Node, IState
 
     public void Physics_Update(float delta)
     {
-        _Movement_Left_Right(delta);
+        _Movement_isPlayerMoving();
+
+        if(isMoving)
+            _Movement_UpdateVelocity(delta);
     }
 
     public void Input_State(InputEvent @event)
@@ -84,19 +97,36 @@ public class Move_Template : Node, IState
 #region USER METHODS
 
     /// <summary>
-    /// Movement on x axis
+    /// Check if the player is moving (direction (joypad) or velocity (acceleration/decceleration))
+    /// </summary>
+    private void _Movement_isPlayerMoving()
+    {
+        if(IS_PLATFORMER)
+            Direction = Nucleus_Movement.GetMovingDirection("L_left", "L_right", false);
+        else
+            Direction = Nucleus_Movement.GetMovingDirection("L_left", "L_right", false, "L_up", "L_down");
+
+        // Check if the player is moving : he has a direction (joypad) or a velocity (acceleration/decceleration)
+        isMoving = (Velocity.x != 0.0f || Velocity.y != 0.0f || Direction.x != 0.0f || Direction.y != 0.0f) ? true : false;
+    }
+
+    /// <summary>
+    /// Movements on axis
     /// </summary>
     /// <param name="delta">delta time</param>
-    private void _Movement_Left_Right(float delta)
+    private void _Movement_UpdateVelocity(float delta)
     {
-        Direction = Nucleus_Movement.GetMovingDirection_Platformer("L_left", "L_right", false);
-
-        // Check if the player is moving
-        isMoving = (Direction.x != 0.0f) ? true : false;
-
-        // Move the player
-        Velocity = Nucleus_Movement.CalculateVelocity(Velocity, MaxSpeed, Acceleration, Decceleration, Direction, delta);
-        Velocity = Nucleus_Utils.StateMachine_Template.RootNode.MoveAndSlide(Velocity, Nucleus_Utils.VECTOR_FLOOR);
+        // Calculate velocity and move the player
+        if(IS_PLATFORMER)
+        {
+            Velocity = Nucleus_Movement.CalculateVelocity(Velocity, MaxSpeed, Acceleration, Decceleration, Direction, delta);
+            Velocity = Nucleus_Utils.StateMachine_Player.RootNode.MoveAndSlide(Velocity, Nucleus_Utils.VECTOR_FLOOR);
+        }
+        else
+        {
+            Velocity = Nucleus_Movement.CalculateVelocity(Velocity, MaxSpeed, Acceleration, Decceleration, Direction, delta, MaxSpeed.y);
+            Velocity = Nucleus_Utils.StateMachine_Player.RootNode.MoveAndSlide(Velocity);
+        }
     }
 
     /// <summary>
