@@ -1,0 +1,15 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://src/scenes/Menu.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/scenes/SceneTransition.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/scenes/SceneManager.cs" type="Script" id=3]
+[ext_resource path="res://src/scenes/Gameover.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/scenes/Game.tscn" type="PackedScene" id=5]
+
+[node name="SceneManager" type="Node"]
+script = ExtResource( 3 )
+Gameover_Scene = ExtResource( 4 )
+Menu_Scene = ExtResource( 1 )
+Game_Scene = ExtResource( 5 )
+
+[node name="SceneTransition" parent="." instance=ExtResource( 2 )]
