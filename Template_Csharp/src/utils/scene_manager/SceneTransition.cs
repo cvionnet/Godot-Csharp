@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public class SceneTransition : Node
 {
@@ -18,7 +17,6 @@ public class SceneTransition : Node
     public override void _Ready()
     {
         _animation = GetNode<AnimationPlayer>("AnimationPlayer");
-
         _animation.Connect("animation_finished", this, nameof(_onAnimation_Finished));
     }
 

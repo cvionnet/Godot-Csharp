@@ -120,12 +120,12 @@ public class Move_Template : Node, IState
         if(IS_PLATFORMER)
         {
             Velocity = Nucleus_Movement.CalculateVelocity(Velocity, MaxSpeed, Acceleration, Decceleration, Direction, delta);
-            Velocity = Nucleus_Utils.StateMachine_Player.RootNode.MoveAndSlide(Velocity, Nucleus_Utils.VECTOR_FLOOR);
+            Velocity = Nucleus_Utils.StateMachine_Template.RootNode.MoveAndSlide(Velocity, Nucleus_Utils.VECTOR_FLOOR);
         }
         else
         {
             Velocity = Nucleus_Movement.CalculateVelocity(Velocity, MaxSpeed, Acceleration, Decceleration, Direction, delta, MaxSpeed.y);
-            Velocity = Nucleus_Utils.StateMachine_Player.RootNode.MoveAndSlide(Velocity);
+            Velocity = Nucleus_Utils.StateMachine_Template.RootNode.MoveAndSlide(Velocity);
         }
     }
 

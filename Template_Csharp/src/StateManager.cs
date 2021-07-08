@@ -25,6 +25,7 @@ public class StateManager : Node
 
     private int _score = 0;
     */
+
 #endregion
 
 //*-------------------------------------------------------------------------*//

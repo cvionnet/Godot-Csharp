@@ -5,9 +5,9 @@ public class Menu : Node
 {
 #region HEADER
 
-    [Signal] private delegate void Menu_NewGame();
+    [Signal] private delegate void Generic_TransitionScene(string nextScene);
 
-	private StateManager _stateManager;
+	//private StateManager _stateManager;
 
     private Button _buttonStart;
 
@@ -19,7 +19,7 @@ public class Menu : Node
 
     public override void _Ready()
     {
-		_stateManager = GetNode<StateManager>("/root/StateManager");
+		//_stateManager = GetNode<StateManager>("/root/StateManager");
 
         _buttonStart = GetNode<Button>("Button");
         _buttonStart.Connect("pressed",this , nameof(_onButtonStart_Pressed));
@@ -38,8 +38,7 @@ public class Menu : Node
     /// </summary>
     private void _onButtonStart_Pressed()
     {
-        // (to SceneManager) Start a new game
-        EmitSignal(nameof(Menu_NewGame));
+        EmitSignal(nameof(Generic_TransitionScene), "Game");    // (to SceneManager) Start a new game
     }
 
 #endregion
@@ -49,9 +48,7 @@ public class Menu : Node
 #region USER METHODS
 
     private void Initialize_Menu()
-    {
-		_stateManager.ActiveScene = StateManager.Scene_Level.MENU;
-    }
+    {}
 
 #endregion
 }

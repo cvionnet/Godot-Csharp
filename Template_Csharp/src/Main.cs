@@ -1,13 +1,10 @@
 using Godot;
 using Nucleus;
+using System;
 
-public class Game : Node
+public class Main : Node
 {
 #region HEADER
-
-	[Signal] private delegate void Game_EndGame();
-
-	private StateManager _stateManager;
 
 #endregion
 
@@ -17,10 +14,14 @@ public class Game : Node
 
     public override void _Ready()
     {
-		_stateManager = GetNode<StateManager>("/root/StateManager");
-
-        Initialize_Game();
+        Initialize_Main();
     }
+
+#endregion
+
+//*-------------------------------------------------------------------------*//
+
+#region SIGNAL CALLBACKS
 
 #endregion
 
@@ -28,22 +29,11 @@ public class Game : Node
 
 #region USER METHODS
 
-    private void Initialize_Game()
+    private void Initialize_Main()
     {
         Nucleus_Utils.Initialize_Utils(GetViewport());
         Nucleus_Utils.State_Manager = GetNode<StateManager>("/root/StateManager");
-
-		_stateManager.ActiveScene = StateManager.Scene_Level.GAME;
     }
-
-	/// <summary>
-	/// Check victory or gameover conditions
-	/// </summary>
-	private void Check_EndGame()
-	{
-        // (to SceneManager)
-        EmitSignal(nameof(Game_EndGame));
-	}
 
 #endregion
 }
