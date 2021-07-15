@@ -1,4 +1,6 @@
+using System;
 using Godot;
+using Serilog;
 
 namespace Nucleus
 {
@@ -9,21 +11,23 @@ namespace Nucleus
     {
     #region VARIABLES
 
-        public const bool DEBUG_MODE = true;
+        public static bool DEBUG_MODE { get; } = true;
 
-        public static float ScreenWidth;
-        public static float ScreenHeight;
+        public static float ScreenWidth { get; private set; }
+        public static float ScreenHeight { get; private set; }
 
         private const float _zero = 0.0f;
 
-        public static Vector2 VECTOR_0 = new Vector2(0.0f,0.0f);         // (=Vector2.ZERO in GDScript)
-        public static Vector2 VECTOR_1 = new Vector2(1.0f,1.0f);
-        public static Vector2 VECTOR_INF = new Vector2(1.0f/_zero,1.0f/_zero);    // infinite vector  (=Vector2.INF in GDScript)
-        public static Vector2 VECTOR_FLOOR = new Vector2(0,-1);          // (=Vector2.UP in GDScript) Use it for plateformer
+        public static Vector2 VECTOR_0 { get; } = new Vector2(0.0f,0.0f);         // (=Vector2.ZERO in GDScript)
+        public static Vector2 VECTOR_1 { get; } = new Vector2(1.0f,1.0f);
+        public static Vector2 VECTOR_INF { get; } = new Vector2(1.0f/_zero,1.0f/_zero);    // infinite vector  (=Vector2.INF in GDScript)
+        public static Vector2 VECTOR_FLOOR { get; } = new Vector2(0,-1);          // (=Vector2.UP in GDScript) Use it for plateformer
 
         // References to state machines & StateManager
         public static StateMachine_Template StateMachine_Template { get; set; }
-        public static StateManager State_Manager;
+        public static StateManager State_Manager { get; set; }
+
+        private static string _gameShortName;
 
     #endregion
 
@@ -37,23 +41,129 @@ namespace Nucleus
         /// <param name="pGame">The viewport of the scene</param>
         public static void Initialize_Utils(Viewport pGame)
         {
+            Initialize_Serilog();
+
             Nucleus_Maths.Rnd.Randomize();
+
+            _gameShortName = ProjectSettings.GetSetting("application/config/description").ToString();
 
             ScreenWidth = pGame.Size.x;
             ScreenHeight = pGame.Size.y;
 
-            DebugPrint("-> Screen size = " + ScreenWidth + " / " + ScreenHeight);
+            Initialize_Log_System();
         }
 
         /// <summary>
-        /// To display a text in the Editor's debug panel ONLY if DEBUG_MODE = true
+        /// Actions to perform when the game is exited
         /// </summary>
-        /// <param name="pText">The text to display</param>
-        public static void DebugPrint(string pText)
+        public static void Finalize_Utils()
+        {
+            Info("User has quit the game");
+            Finalize_Serilog();
+        }
+
+    #endregion
+
+    #region METHODS - LOG
+
+        /// <summary>
+        /// Initialize the Serilog Logger
+        /// </summary>
+        private static void Initialize_Serilog()
+        {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception} {Properties:j}")
+                .CreateLogger();
+        }
+
+        /// <summary>
+        /// Finalize the Serilog Logger
+        /// </summary>
+        public static void Finalize_Serilog() => Log.CloseAndFlush();
+
+        /// <summary>
+        /// Print system information at startup
+        /// </summary>
+        private static void Initialize_Log_System()
+        {
+            // Godot OS options : https://docs.godotengine.org/en/stable/classes/class_os.html
+            Info($"Game Name : { ProjectSettings.GetSetting("application/config/name") } ({_gameShortName})", false);
+            Info($"Debug Build Internal : { DEBUG_MODE.ToString().ToUpper() } / Godot : { OS.IsDebugBuild().ToString().ToUpper() }", false);
+            Info($"Id Unique : { OS.GetUniqueId() }", false);
+            Info($"Time : { OS.GetTime(true) } UTC / { OS.GetTime(false) } Local", false);
+
+            Info($"System : { OS.GetName() }", false);
+            Info($"CPU Number of threads : { OS.GetProcessorCount() } / Memory : { (OS.GetStaticMemoryUsage() / 1024).ToString() } Go", false);
+            Info($"Power Type : { OS.GetPowerState() } / Left : { OS.GetPowerSecondsLeft() }", false);
+
+            Info($"Video Driver : { OS.GetCurrentVideoDriver() } / Screen size { OS.GetScreenSize() } / Game screen size { OS.GetRealWindowSize() }", true);
+
+            Info($"Mobile Model : { OS.GetModelName() }", false);
+        }
+
+        /// <summary>
+        /// Display an information message using Serilog
+        /// ⚠️ ONLY if DEBUG_MODE = true
+        /// </summary>
+        /// <param name="pMessage">text to display</param>
+        /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
+        public static void Info(string pMessage, bool pPrintToGodotConsole = true)
         {
             if (DEBUG_MODE)
-                GD.Print(pText);
+            {
+                if (pPrintToGodotConsole) GD.Print($"[INF]{pMessage}");
+                Log.Information($"[{_gameShortName}]{pMessage}");
+            }
         }
+
+        /// <summary>
+        /// Display a debug message using Serilog
+        /// </summary>
+        /// <param name="pMessage">text to display</param>
+        /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
+        public static void Debug(string pMessage, bool pPrintToGodotConsole = true)
+        {
+            if (pPrintToGodotConsole) GD.Print($"[DBG]{pMessage}");
+            Log.Debug($"[{_gameShortName}]{pMessage}");
+        }
+
+        /// <summary>
+        /// Display a debug message using Serilog
+        /// </summary>
+        /// <param name="pMessage">text to display</param>
+        /// <param name="pException">the exception raised</param>
+        /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
+        public static void Debug(string pMessage, Exception pException, bool pPrintToGodotConsole = true)
+        {
+            if (pPrintToGodotConsole) GD.Print($"[DBG]{pMessage} - {pException}");
+            Log.Debug(pException, $"[{_gameShortName}]{pMessage}");
+        }
+
+        /// <summary>
+        /// Display an error message using Serilog
+        /// </summary>
+        /// <param name="pMessage">text to display</param>
+        /// <param name="pException">the exception raised</param>
+        /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
+        public static void Error(string pMessage, Exception pException, bool pPrintToGodotConsole = true)
+        {
+            if (pPrintToGodotConsole) GD.PrintErr($"[ERR]{pMessage} - {pException}");
+            Log.Error(pException, $"[{_gameShortName}]{pMessage}");
+        }
+
+        /// <summary>
+        /// Display a fatal error message using Serilog
+        /// </summary>
+        /// <param name="pMessage">text to display</param>
+        /// <param name="pException">the exception raised</param>
+        /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
+        public static void Fatal(string pMessage, Exception pException, bool pPrintToGodotConsole = true)
+        {
+            if (pPrintToGodotConsole) GD.PrintErr($"[FTL]{pMessage} - {pException}");
+            Log.Fatal(pException, $"[{_gameShortName}]{pMessage}");
+        }
+
     #endregion
 
     #region METHODS - NODES
@@ -74,7 +184,5 @@ namespace Nucleus
         }
 
     #endregion
-
-
     }
 }

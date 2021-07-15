@@ -9,7 +9,7 @@ namespace Nucleus.Physics
         public const float STEERING_CLOSE_DISTANCE = 3.0f;      // to stop the character to move if he is closed to the target (or it will have a kind of Parkinson movement)
         public const float STEERING_DEFAULT_FLEE = 200.0f;      // to run away
 
-        public static Node2D LeaderToFollow;    // to save the leader node to follow
+        public static Node2D LeaderToFollow { get; set; }    // to save the leader node to follow
 
         /// <summary>
         /// Calculate a velocity to move a character towards a destination (Follow)

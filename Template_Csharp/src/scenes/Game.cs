@@ -8,8 +8,6 @@ public class Game : Node
 
     [Signal] private delegate void Generic_TransitionScene(string nextScene);
 
-	//private StateManager _stateManager;
-
 #endregion
 
 //*-------------------------------------------------------------------------*//
@@ -26,8 +24,6 @@ public class Game : Node
 
     public override void _Ready()
     {
-		//_stateManager = GetNode<StateManager>("/root/StateManager");
-
         Initialize_Game();
     }
 

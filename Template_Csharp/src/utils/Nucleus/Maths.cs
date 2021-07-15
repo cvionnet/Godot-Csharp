@@ -6,7 +6,7 @@ namespace Nucleus
     {
     #region VARIABLES
 
-        public static RandomNumberGenerator Rnd = new RandomNumberGenerator();
+        public static RandomNumberGenerator Rnd { get; } = new RandomNumberGenerator();
 
     #endregion
 

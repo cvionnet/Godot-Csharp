@@ -17,6 +17,17 @@ public class Main : Node
         Initialize_Main();
     }
 
+    public override void _Notification(int what)
+    {
+        // When exit the game
+        if (what == MainLoop.NotificationWmQuitRequest)
+        {
+            Nucleus_Utils.Finalize_Utils();
+
+            GetTree().Quit(); // default behavior
+        }
+    }
+
 #endregion
 
 //*-------------------------------------------------------------------------*//
