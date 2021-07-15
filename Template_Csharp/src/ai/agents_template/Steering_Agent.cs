@@ -138,7 +138,7 @@ public class Steering_Agent_Template : KinematicBody2D
     /// </summary>
     private void _Wander_GetDestination()
     {
-        _targetGlobalPosition = new Vector2(Nucleus_Utils.Rnd.RandfRange(10.0f, GetViewport().Size.x), Nucleus_Utils.Rnd.RandfRange(10.0f, GetViewport().Size.y));
+        _targetGlobalPosition = new Vector2(Nucleus_Maths.Rnd.RandfRange(10.0f, GetViewport().Size.x), Nucleus_Maths.Rnd.RandfRange(10.0f, GetViewport().Size.y));
     }
 
     /// <summary>

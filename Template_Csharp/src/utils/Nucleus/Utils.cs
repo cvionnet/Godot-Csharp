@@ -21,8 +21,6 @@ namespace Nucleus
         public static Vector2 VECTOR_INF = new Vector2(1.0f/_zero,1.0f/_zero);    // infinite vector  (=Vector2.INF in GDScript)
         public static Vector2 VECTOR_FLOOR = new Vector2(0,-1);          // (=Vector2.UP in GDScript) Use it for plateformer
 
-        public static RandomNumberGenerator Rnd = new RandomNumberGenerator();
-
         // References to state machines & StateManager
         public static StateMachine_Template StateMachine_Template { get; set; }
         public static StateManager State_Manager;
@@ -39,7 +37,7 @@ namespace Nucleus
         /// <param name="pGame">The viewport of the scene</param>
         public static void Initialize_Utils(Viewport pGame)
         {
-            Rnd.Randomize();
+            Nucleus_Maths.Rnd.Randomize();
 
             ScreenWidth = pGame.Size.x;
             ScreenHeight = pGame.Size.y;

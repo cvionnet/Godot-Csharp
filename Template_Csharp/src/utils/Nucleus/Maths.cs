@@ -4,6 +4,16 @@ namespace Nucleus
 {
     public static class Nucleus_Maths
     {
+    #region VARIABLES
+
+        public static RandomNumberGenerator Rnd = new RandomNumberGenerator();
+
+    #endregion
+
+    //*-------------------------------------------------------------------------*//
+
+    #region METHODS - RANDOM
+
         /// <summary>
         /// Return a int random value, avoiding 0
         /// </summary>
@@ -15,7 +25,7 @@ namespace Nucleus
             int number;
             do
             {
-                number = Nucleus_Utils.Rnd.RandiRange(min, max);
+                number = Rnd.RandiRange(min, max);
             } while (number == 0);
             return number;
         }
@@ -31,10 +41,14 @@ namespace Nucleus
             float number;
             do
             {
-                number = Nucleus_Utils.Rnd.RandfRange(min, max);
+                number = Rnd.RandfRange(min, max);
             } while (number == 0.0f);
             return number;
         }
+
+    #endregion
+
+    #region METHODS - GEOMETRY
 
         /// <summary>
         /// Get the direction vector between 2 objects
@@ -90,5 +104,8 @@ namespace Nucleus
             // Add the destination point
             return new Vector2(x + pDestinationPosition.x, y + pDestinationPosition.y);
         }
+
+    #endregion
+
     }
 }
