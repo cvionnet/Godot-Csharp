@@ -28,6 +28,7 @@ namespace Nucleus
         public static StateManager State_Manager { get; set; }
 
         private static string _gameShortName;
+        private static string _uniqueId;
 
     #endregion
 
@@ -46,6 +47,7 @@ namespace Nucleus
             Nucleus_Maths.Rnd.Randomize();
 
             _gameShortName = ProjectSettings.GetSetting("application/config/description").ToString();
+            _uniqueId = Guid.NewGuid().ToString();      // generate a unique ID to be able to follow logs of the session
 
             ScreenWidth = pGame.Size.x;
             ScreenHeight = pGame.Size.y;
@@ -73,7 +75,11 @@ namespace Nucleus
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.Console(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception} {Properties:j}")
+#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
+//! TODO test it on Linux / OSX / Mobile
+            // Only use Serilog on Windows  (not working with HTML5)
+                .WriteTo.Console(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception} {Properties:j}")
+#endif
                 .CreateLogger();
         }
 
@@ -90,12 +96,14 @@ namespace Nucleus
             // Godot OS options : https://docs.godotengine.org/en/stable/classes/class_os.html
             Info($"Game Name : { ProjectSettings.GetSetting("application/config/name") } ({_gameShortName})", false);
             Info($"Debug Build Internal : { DEBUG_MODE.ToString().ToUpper() } / Godot : { OS.IsDebugBuild().ToString().ToUpper() }", false);
-            Info($"Id Unique : { OS.GetUniqueId() }", false);
+            Info($"Id Unique : { _uniqueId }", false);
             Info($"Time : { OS.GetTime(true) } UTC / { OS.GetTime(false) } Local", false);
 
             Info($"System : { OS.GetName() }", false);
-            Info($"CPU Number of threads : { OS.GetProcessorCount() } / Memory : { (OS.GetStaticMemoryUsage() / 1024).ToString() } Go", false);
+            Info($"CPU Number of cores : { OS.GetProcessorCount()/2 } / Memory : { (OS.GetStaticMemoryUsage() / 1024).ToString() } Go", false);
+#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
             Info($"Power Type : { OS.GetPowerState() } / Left : { OS.GetPowerSecondsLeft() }", false);
+#endif
 
             Info($"Video Driver : { OS.GetCurrentVideoDriver() } / Screen size { OS.GetScreenSize() } / Game screen size { OS.GetRealWindowSize() }", true);
 
@@ -112,8 +120,12 @@ namespace Nucleus
         {
             if (DEBUG_MODE)
             {
+#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
                 if (pPrintToGodotConsole) GD.Print($"[INF]{pMessage}");
-                Log.Information($"[{_gameShortName}]{pMessage}");
+                Log.Information($"[{_gameShortName}][{_uniqueId}]{pMessage}");
+#else
+                GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [INF][{_gameShortName}][{_uniqueId}]{pMessage}");
+#endif
             }
         }
 
@@ -124,8 +136,12 @@ namespace Nucleus
         /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
         public static void Debug(string pMessage, bool pPrintToGodotConsole = true)
         {
+#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
             if (pPrintToGodotConsole) GD.Print($"[DBG]{pMessage}");
             Log.Debug($"[{_gameShortName}]{pMessage}");
+#else
+            GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [DBG][{_gameShortName}][{_uniqueId}]{pMessage}");
+#endif
         }
 
         /// <summary>
@@ -136,8 +152,12 @@ namespace Nucleus
         /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
         public static void Debug(string pMessage, Exception pException, bool pPrintToGodotConsole = true)
         {
+#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
             if (pPrintToGodotConsole) GD.Print($"[DBG]{pMessage} - {pException}");
             Log.Debug(pException, $"[{_gameShortName}]{pMessage}");
+#else
+            GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [DBG][{_gameShortName}][{_uniqueId}]{pMessage} - {pException}");
+#endif
         }
 
         /// <summary>
@@ -148,8 +168,12 @@ namespace Nucleus
         /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
         public static void Error(string pMessage, Exception pException, bool pPrintToGodotConsole = true)
         {
+#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
             if (pPrintToGodotConsole) GD.PrintErr($"[ERR]{pMessage} - {pException}");
             Log.Error(pException, $"[{_gameShortName}]{pMessage}");
+#else
+            GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [ERR][{_gameShortName}][{_uniqueId}]{pMessage} - {pException}");
+#endif
         }
 
         /// <summary>
@@ -160,8 +184,12 @@ namespace Nucleus
         /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
         public static void Fatal(string pMessage, Exception pException, bool pPrintToGodotConsole = true)
         {
+#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
             if (pPrintToGodotConsole) GD.PrintErr($"[FTL]{pMessage} - {pException}");
             Log.Fatal(pException, $"[{_gameShortName}]{pMessage}");
+#else
+            GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [FTL][{_gameShortName}][{_uniqueId}]{pMessage} - {pException}");
+#endif
         }
 
     #endregion
