@@ -75,9 +75,9 @@ namespace Nucleus
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
-//! TODO test it on Linux / OSX / Mobile
-            // Only use Serilog on Windows  (not working with HTML5)
+#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_SERVER
+//! TODO test it on Linux / OSX
+            // Only use Serilog on Windows  (not working with HTML5 / Android)
                 .WriteTo.Console(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception} {Properties:j}")
 #endif
                 .CreateLogger();
@@ -120,7 +120,7 @@ namespace Nucleus
         {
             if (DEBUG_MODE)
             {
-#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
+#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_SERVER
                 if (pPrintToGodotConsole) GD.Print($"[INF]{pMessage}");
                 Log.Information($"[{_gameShortName}][{_uniqueId}]{pMessage}");
 #else
@@ -136,7 +136,7 @@ namespace Nucleus
         /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
         public static void Debug(string pMessage, bool pPrintToGodotConsole = true)
         {
-#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
+#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_SERVER
             if (pPrintToGodotConsole) GD.Print($"[DBG]{pMessage}");
             Log.Debug($"[{_gameShortName}]{pMessage}");
 #else
@@ -152,7 +152,7 @@ namespace Nucleus
         /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
         public static void Debug(string pMessage, Exception pException, bool pPrintToGodotConsole = true)
         {
-#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
+#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_SERVER
             if (pPrintToGodotConsole) GD.Print($"[DBG]{pMessage} - {pException}");
             Log.Debug(pException, $"[{_gameShortName}]{pMessage}");
 #else
@@ -168,7 +168,7 @@ namespace Nucleus
         /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
         public static void Error(string pMessage, Exception pException, bool pPrintToGodotConsole = true)
         {
-#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
+#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_SERVER
             if (pPrintToGodotConsole) GD.PrintErr($"[ERR]{pMessage} - {pException}");
             Log.Error(pException, $"[{_gameShortName}]{pMessage}");
 #else
@@ -184,7 +184,7 @@ namespace Nucleus
         /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
         public static void Fatal(string pMessage, Exception pException, bool pPrintToGodotConsole = true)
         {
-#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
+#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_SERVER
             if (pPrintToGodotConsole) GD.PrintErr($"[FTL]{pMessage} - {pException}");
             Log.Fatal(pException, $"[{_gameShortName}]{pMessage}");
 #else
