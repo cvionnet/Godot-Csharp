@@ -1,6 +1,5 @@
 using System;
 using Godot;
-using Serilog;
 
 namespace Nucleus
 {
@@ -61,7 +60,6 @@ namespace Nucleus
         public static void Finalize_Utils()
         {
             Info("User has quit the game");
-            Finalize_Serilog();
         }
 
     #endregion
@@ -73,20 +71,9 @@ namespace Nucleus
         /// </summary>
         private static void Initialize_Serilog()
         {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_SERVER
-//! TODO test it on Linux / OSX
-            // Only use Serilog on Windows  (not working with HTML5 / Android)
-                .WriteTo.Console(outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception} {Properties:j}")
-#endif
-                .CreateLogger();
+            // Address to Loki server
+            //var credentials = new BasicAuthCredentials("https://logs-prod-us-central1.grafana.net", "71119", "eyJrIjoiOTU3OTA4OWUyZjFkNjNkMzdjNTA3MmE2MmExMzllM2EwMDk1NjkxYSIsIm4iOiJMb2tpQVBJS2V5IiwiaWQiOjUxMzI3N30=");
         }
-
-        /// <summary>
-        /// Finalize the Serilog Logger
-        /// </summary>
-        public static void Finalize_Serilog() => Log.CloseAndFlush();
 
         /// <summary>
         /// Print system information at startup
@@ -94,102 +81,103 @@ namespace Nucleus
         private static void Initialize_Log_System()
         {
             // Godot OS options : https://docs.godotengine.org/en/stable/classes/class_os.html
-            Info($"Game Name : { ProjectSettings.GetSetting("application/config/name") } ({_gameShortName})", false);
-            Info($"Debug Build Internal : { DEBUG_MODE.ToString().ToUpper() } / Godot : { OS.IsDebugBuild().ToString().ToUpper() }", false);
-            Info($"Id Unique : { _uniqueId }", false);
-            Info($"Time : { OS.GetTime(true) } UTC / { OS.GetTime(false) } Local", false);
+            Info($"Game Name : { ProjectSettings.GetSetting("application/config/name") } ({_gameShortName})");
+            Info($"Debug Build Internal : { DEBUG_MODE.ToString().ToUpper() } / Godot : { OS.IsDebugBuild().ToString().ToUpper() }");
+            Info($"Id Unique : { _uniqueId }");
+            Info($"Time : { OS.GetTime(true) } UTC / { OS.GetTime(false) } Local");
 
-            Info($"System : { OS.GetName() }", false);
-            Info($"CPU Number of cores : { OS.GetProcessorCount()/2 } / Memory : { (OS.GetStaticMemoryUsage() / 1024).ToString() } Go", false);
+            Info($"System : { OS.GetName() }");
+            Info($"CPU Number of cores : { OS.GetProcessorCount()/2 } / Memory : { (OS.GetStaticMemoryUsage() / 1024).ToString() } Go");
 #if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_ANDROID || GODOT_IOS || GODOT_SERVER
-            Info($"Power Type : { OS.GetPowerState() } / Left : { OS.GetPowerSecondsLeft() }", false);
+            Info($"Power Type : { OS.GetPowerState() } / Left : { OS.GetPowerSecondsLeft() }");
 #endif
 
-            Info($"Video Driver : { OS.GetCurrentVideoDriver() } / Screen size { OS.GetScreenSize() } / Game screen size { OS.GetRealWindowSize() }", true);
+            Info($"Video Driver : { OS.GetCurrentVideoDriver() } / Screen size { OS.GetScreenSize() } / Game screen size { OS.GetRealWindowSize() }");
 
-            Info($"Mobile Model : { OS.GetModelName() }", false);
+            Info($"Mobile Model : { OS.GetModelName() }");
+            Info("---------------------------------------------------------------------------------------------", pWriteToDBLog: false);
         }
 
         /// <summary>
-        /// Display an information message using Serilog
+        /// Display an information message
         /// ⚠️ ONLY if DEBUG_MODE = true
         /// </summary>
-        /// <param name="pMessage">text to display</param>
-        /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
-        public static void Info(string pMessage, bool pPrintToGodotConsole = true)
+        /// <param name="pMessage">Text to display</param>
+        /// <param name="pClassName">Name of the class  (GetType().Name)</param>
+        /// <param name="pMethodName">Name of the method  (MethodBase.GetCurrentMethod().Name)</param>
+        /// <param name="pWriteToDBLog">True = write the message in the database log system</param>
+        public static void Info(string pMessage, string pClassName = "", string pMethodName = "", bool pWriteToDBLog = true)
         {
             if (DEBUG_MODE)
             {
-#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_SERVER
-                if (pPrintToGodotConsole) GD.Print($"[INF]{pMessage}");
-                Log.Information($"[{_gameShortName}][{_uniqueId}]{pMessage}");
-#else
-                GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [INF][{_gameShortName}][{_uniqueId}]{pMessage}");
-#endif
+                if (pClassName != "") pClassName = string.Concat("[C:", pClassName, "]");
+                if (pMethodName != "") pMethodName = string.Concat("[M:", pMethodName, "]");
+                GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [INF][{_gameShortName}][{_uniqueId}]{pClassName}{pMethodName}{pMessage}");
+                //if (pWriteToDBLog) TODO write to Loki server
             }
         }
 
         /// <summary>
-        /// Display a debug message using Serilog
+        /// Display a debug message
         /// </summary>
-        /// <param name="pMessage">text to display</param>
-        /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
-        public static void Debug(string pMessage, bool pPrintToGodotConsole = true)
+        /// <param name="pMessage">Text to display</param>
+        /// <param name="pClassName">Name of the class  (GetType().Name)</param>
+        /// <param name="pMethodName">Name of the method  (MethodBase.GetCurrentMethod().Name)</param>
+        /// <param name="pWriteToDBLog">True = write the message in the database log system</param>
+        public static void Debug(string pMessage, string pClassName = "", string pMethodName = "", bool pWriteToDBLog = true)
         {
-#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_SERVER
-            if (pPrintToGodotConsole) GD.Print($"[DBG]{pMessage}");
-            Log.Debug($"[{_gameShortName}]{pMessage}");
-#else
-            GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [DBG][{_gameShortName}][{_uniqueId}]{pMessage}");
-#endif
+            if (pClassName != "") pClassName = string.Concat("[C:", pClassName, "]");
+            if (pMethodName != "") pMethodName = string.Concat("[M:", pMethodName, "]");
+            GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [DBG][{_gameShortName}][{_uniqueId}]{pClassName}{pMethodName}{pMessage}");
+            //if (pWriteToDBLog) TODO write to Loki server
         }
 
         /// <summary>
         /// Display a debug message using Serilog
         /// </summary>
-        /// <param name="pMessage">text to display</param>
-        /// <param name="pException">the exception raised</param>
-        /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
-        public static void Debug(string pMessage, Exception pException, bool pPrintToGodotConsole = true)
+        /// <param name="pMessage">Text to display</param>
+        /// <param name="pException">The exception raised</param>
+        /// <param name="pClassName">Name of the class  (GetType().Name)</param>
+        /// <param name="pMethodName">Name of the method  (MethodBase.GetCurrentMethod().Name)</param>
+        /// <param name="pWriteToDBLog">True = write the message in the database log system</param>
+        public static void Debug(string pMessage, Exception pException, string pClassName = "", string pMethodName = "", bool pWriteToDBLog = true)
         {
-#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_SERVER
-            if (pPrintToGodotConsole) GD.Print($"[DBG]{pMessage} - {pException}");
-            Log.Debug(pException, $"[{_gameShortName}]{pMessage}");
-#else
-            GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [DBG][{_gameShortName}][{_uniqueId}]{pMessage} - {pException}");
-#endif
+            if (pClassName != "") pClassName = string.Concat("[C:", pClassName, "]");
+            if (pMethodName != "") pMethodName = string.Concat("[M:", pMethodName, "]");
+            GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [DBG][{_gameShortName}][{_uniqueId}]{pClassName}{pMethodName}{pMessage} - {pException}");
+            //if (pWriteToDBLog) TODO write to Loki server
         }
 
         /// <summary>
         /// Display an error message using Serilog
         /// </summary>
-        /// <param name="pMessage">text to display</param>
-        /// <param name="pException">the exception raised</param>
-        /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
-        public static void Error(string pMessage, Exception pException, bool pPrintToGodotConsole = true)
+        /// <param name="pMessage">Text to display</param>
+        /// <param name="pException">The exception raised</param>
+        /// <param name="pClassName">Name of the class  (GetType().Name)</param>
+        /// <param name="pMethodName">Name of the method  (MethodBase.GetCurrentMethod().Name)</param>
+        /// <param name="pWriteToDBLog">True = write the message in the database log system</param>
+        public static void Error(string pMessage, Exception pException, string pClassName = "", string pMethodName = "", bool pWriteToDBLog = true)
         {
-#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_SERVER
-            if (pPrintToGodotConsole) GD.PrintErr($"[ERR]{pMessage} - {pException}");
-            Log.Error(pException, $"[{_gameShortName}]{pMessage}");
-#else
-            GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [ERR][{_gameShortName}][{_uniqueId}]{pMessage} - {pException}");
-#endif
+            if (pClassName != "") pClassName = string.Concat("[C:", pClassName, "]");
+            if (pMethodName != "") pMethodName = string.Concat("[M:", pMethodName, "]");
+            GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [ERR][{_gameShortName}][{_uniqueId}]{pClassName}{pMethodName}{pMessage} - {pException}");
+            //if (pWriteToDBLog) TODO write to Loki server
         }
 
         /// <summary>
         /// Display a fatal error message using Serilog
         /// </summary>
-        /// <param name="pMessage">text to display</param>
-        /// <param name="pException">the exception raised</param>
-        /// <param name="pPrintToGodotConsole">True = display message on Godot Editor Output window</param>
-        public static void Fatal(string pMessage, Exception pException, bool pPrintToGodotConsole = true)
+        /// <param name="pMessage">Text to display</param>
+        /// <param name="pException">The exception raised</param>
+        /// <param name="pClassName">Name of the class  (GetType().Name)</param>
+        /// <param name="pMethodName">Name of the method  (MethodBase.GetCurrentMethod().Name)</param>
+        /// <param name="pWriteToDBLog">True = write the message in the database log system</param>
+        public static void Fatal(string pMessage, Exception pException, string pClassName = "", string pMethodName = "", bool pWriteToDBLog = true)
         {
-#if GODOT_WINDOWS || GODOT_X11 || GODOT_OSX || GODOT_SERVER
-            if (pPrintToGodotConsole) GD.PrintErr($"[FTL]{pMessage} - {pException}");
-            Log.Fatal(pException, $"[{_gameShortName}]{pMessage}");
-#else
-            GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [FTL][{_gameShortName}][{_uniqueId}]{pMessage} - {pException}");
-#endif
+            if (pClassName != "") pClassName = string.Concat("[C:", pClassName, "]");
+            if (pMethodName != "") pMethodName = string.Concat("[M:", pMethodName, "]");
+            GD.Print($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")} [FTL][{_gameShortName}][{_uniqueId}]{pClassName}{pMethodName}{pMessage} - {pException}");
+            //if (pWriteToDBLog) TODO write to Loki server
         }
 
     #endregion

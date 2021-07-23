@@ -81,7 +81,9 @@ public class StateMachine_Template : StateMachine_Core
         }
         else
         {
-            GD.Print("ERROR (in States.cs) - State Machine node is null (Class : " + this.GetType() + ")");
+            //GD.Print("ERROR (in States.cs) - State Machine node is null (Class : " + this.GetType() + ")");
+            Nucleus_Utils.Error($"State Machine node is null (Groupname : {pGroupName}", new NullReferenceException(), GetType().Name, MethodBase.GetCurrentMethod().Name);
+
             GetTree().Quit();      // Quit game
         }
     }

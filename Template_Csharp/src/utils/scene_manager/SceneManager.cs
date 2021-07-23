@@ -63,7 +63,8 @@ public class SceneManager : Node
         }
         else
         {
-            GD.PrintErr($"SceneManager._onSceneTransition_Finished - The scene {_nextScene} does not exists");
+            //GD.PrintErr($"SceneManager._onSceneTransition_Finished - The scene {_nextScene} does not exists");
+            Nucleus_Utils.Error($"The scene {_nextScene} does not exists !", new TargetException(), GetType().Name, MethodBase.GetCurrentMethod().Name);
         }
 	}
 

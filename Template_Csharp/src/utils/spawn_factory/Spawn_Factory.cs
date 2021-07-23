@@ -8,8 +8,8 @@ using Nucleus;
 /// How to use it :
 ///     1. ⚠️ the scene that will be instancied must have a script attached
 ///     2. in the scene where to spawn :
-///         1. add the Spawn_Factory scene as a node  (+ add code to use this node)
-///         2. create an empty "private Initialize_Game()" method, call it in the "_Ready()" method and put the following code inside
+///         1. add the Spawn_Factory scene as a node and rename it (eg : Spawn_Enemies)
+///         2. in the parent code, in the "_Ready()" method, put the following code inside
 ///
 ///         3.1 only one scene ?
 ///             _spawnFactory.Load_NewScene("res://src/MyScene.tscn");
@@ -51,10 +51,29 @@ public class Spawn_Factory : Position2D
     /// Load an existing scene in the Spawn_Factory  (can be used to spawn random instance of different scene)
     /// </summary>
     /// <param name="pPath">the path to the scene (eg : ""res://src/Enemy.tscn")</param>
-    public void Load_NewScene(string pPath)
+    /// <returns>True if no errors occurs</returns>
+    public bool Load_NewScene(string pPath)
     {
-        PackedScene scene = (PackedScene)ResourceLoader.Load(pPath);
-        ListScenes.Add(scene);
+        if (pPath != "")
+        {
+            try
+            {
+                PackedScene scene = (PackedScene)ResourceLoader.Load(pPath);
+                ListScenes.Add(scene);
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+                Nucleus_Utils.Error($"Error while loading Path = {pPath}", ex, GetType().Name, MethodBase.GetCurrentMethod().Name);
+                return false;
+            }
+        }
+        else
+        {
+            Nucleus_Utils.Error("Path is empty", new CustomAttributeFormatException(), GetType().Name, MethodBase.GetCurrentMethod().Name);
+        }
+
+        return false;
     }
 
     /// <summary>
