@@ -29,6 +29,8 @@ public class Player_Template : KinematicBody2D
     {
         _stateMachine = GetNode<StateMachine_Template>("StateMachine");
         _collider = GetNode<CollisionShape2D>("CollisionShape2D");
+
+        Initialize_Player();
     }
 
 #endregion
@@ -42,6 +44,9 @@ public class Player_Template : KinematicBody2D
 //*-------------------------------------------------------------------------*//
 
 #region USER METHODS
+
+    private void Initialize_Player()
+    { }
 
 #endregion
 }

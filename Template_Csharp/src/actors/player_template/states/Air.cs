@@ -23,6 +23,8 @@ public class Air_Template : Node, IState
     public override void _Ready()
     {
         _moveNode = GetParent<Move_Template>();
+
+        Initialize_AirPlayer();
     }
 
 #endregion
@@ -104,6 +106,9 @@ public class Air_Template : Node, IState
 //*-------------------------------------------------------------------------*//
 
 #region USER METHODS
+
+    private void Initialize_AirPlayer()
+    { }
 
     /// <summary>
     /// Make the player jump

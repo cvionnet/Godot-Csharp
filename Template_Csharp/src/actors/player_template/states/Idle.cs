@@ -17,6 +17,8 @@ public class Idle_Template : Node, IState
     public override void _Ready()
     {
         _moveNode = GetParent<Move_Template>();
+
+        Initialize_IdlePlayer();
     }
 
 #endregion
@@ -75,6 +77,9 @@ public class Idle_Template : Node, IState
 //*-------------------------------------------------------------------------*//
 
 #region USER METHODS
+
+    private void Initialize_IdlePlayer()
+    { }
 
 #endregion
 }

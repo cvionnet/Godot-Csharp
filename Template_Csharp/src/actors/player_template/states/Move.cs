@@ -33,22 +33,7 @@ public class Move_Template : Node, IState
 
     public override void _Ready()
     {
-        if(IS_PLATFORMER)
-        {
-            Acceleration_Default = new Vector2(Inertia_Start, Gravity);
-            Decceleration_Default = new Vector2(Inertia_Stop, 0.0f);
-        }
-        else
-        {
-            Acceleration_Default = new Vector2(Inertia_Start, Inertia_Start);
-            Decceleration_Default = new Vector2(Inertia_Stop, Inertia_Stop);
-        }
-
-        MaxSpeed = MaxSpeed_Default;
-        Acceleration = Acceleration_Default;
-        Decceleration = Decceleration_Default;
-
-        Velocity = Nucleus_Utils.VECTOR_0;
+        Initialize_MovePlayer();
     }
 
 #endregion
@@ -95,6 +80,26 @@ public class Move_Template : Node, IState
 //*-------------------------------------------------------------------------*//
 
 #region USER METHODS
+
+    private void Initialize_MovePlayer()
+    {
+        if(IS_PLATFORMER)
+        {
+            Acceleration_Default = new Vector2(Inertia_Start, Gravity);
+            Decceleration_Default = new Vector2(Inertia_Stop, 0.0f);
+        }
+        else
+        {
+            Acceleration_Default = new Vector2(Inertia_Start, Inertia_Start);
+            Decceleration_Default = new Vector2(Inertia_Stop, Inertia_Stop);
+        }
+
+        MaxSpeed = MaxSpeed_Default;
+        Acceleration = Acceleration_Default;
+        Decceleration = Decceleration_Default;
+
+        Velocity = Nucleus_Utils.VECTOR_0;
+    }
 
     /// <summary>
     /// Check if the player is moving (direction (joypad) or velocity (acceleration/decceleration))

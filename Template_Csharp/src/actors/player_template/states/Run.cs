@@ -19,6 +19,8 @@ public class Run_Template : Node, IState
     public override void _Ready()
     {
         _moveNode = GetParent<Move_Template>();
+
+        Initialize_RunPlayer();
     }
 
 #endregion
@@ -77,6 +79,9 @@ public class Run_Template : Node, IState
 //*-------------------------------------------------------------------------*//
 
 #region USER METHODS
+
+    private void Initialize_RunPlayer()
+    { }
 
     /// <summary>
     /// Make the player run faster
