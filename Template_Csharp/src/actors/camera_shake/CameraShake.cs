@@ -1,4 +1,5 @@
 using Godot;
+using Nucleus;
 using System;
 
 public class CameraShake : Camera2D
@@ -25,6 +26,13 @@ public class CameraShake : Camera2D
     private bool _onYAxis = true;
     private bool _useRotation = false;
 
+    // Zoom level
+    private float _minZoom = 0.5f;
+    private float _maxZoom = 1.0f;
+    //private float _zoomFactor = 0.1f;   // how much we increase or decrease the `_zoom_level`
+    private float _zoomDuration = 0.8f;
+    private float _zoomTargetLevel = 1.0f;   // camera's target zoom level
+
 #endregion
 
 //*-------------------------------------------------------------------------*//
@@ -43,8 +51,17 @@ public class CameraShake : Camera2D
     public override void _Process(float delta)
     {
         if(_isShaking)
+        {
             _Shake(delta);
+            Offset = Nucleus_Utils.VECTOR_0;
+        }
     }
+
+    public override void _PhysicsProcess(float delta)
+    {
+        if (_zoomTargetLevel != 1.0f)
+            Position = GetGlobalMousePosition();
+    }    
 
 #endregion
 
@@ -85,6 +102,20 @@ public class CameraShake : Camera2D
 
         if (_useRotation)
             Rotation = Noise.GetNoise3d(0.0f, 0.0f, _time * _speed) * _shakeMaxRoll * amount;
+    }
+
+    /// <summary>
+    /// to zoom the camera
+    /// </summary>
+    /// <param name="pZoomValue">Zoom factor</param>
+    public void Zoom_Camera(float pZoomValue)
+    {
+        // Limit the value between `min_zoom` and `max_zoom`
+        _zoomTargetLevel = Mathf.Clamp(pZoomValue, _minZoom, _maxZoom);
+
+        // Animate the zoom
+        _tween.InterpolateProperty(this, "zoom", Zoom, new Vector2(_zoomTargetLevel, _zoomTargetLevel), _zoomDuration, Tween.TransitionType.Sine, Tween.EaseType.Out);
+        _tween.Start();
     }
 
     /// <summary>
