@@ -1,12 +1,14 @@
 using Godot;
 using Nucleus;
-using System;
 
 public class CameraShake : Camera2D
 {
 #region HEADER
 
-    [Export] private OpenSimplexNoise Noise;
+    [Export] private readonly OpenSimplexNoise Noise;
+    [Export] private readonly float ZoomMinValue = 0.1f;
+    [Export] private readonly float ZoomMaxValue = 1.0f;
+    [Export] private readonly float ZoomDefaultZoomduration = 0.6f;
 
     private Timer _shakeLength;
     private Tween _tween;
@@ -27,11 +29,10 @@ public class CameraShake : Camera2D
     private bool _useRotation = false;
 
     // Zoom level
-    private float _minZoom = 0.5f;
-    private float _maxZoom = 1.0f;
     //private float _zoomFactor = 0.1f;   // how much we increase or decrease the `_zoom_level`
-    private float _zoomDuration = 0.8f;
+    private float _zoomDuration = 0.6f;
     private float _zoomTargetLevel = 1.0f;   // camera's target zoom level
+    private Vector2 _zoomTargetPosition;   // where to position the center of the camera's during a zoom
 
 #endregion
 
@@ -59,9 +60,9 @@ public class CameraShake : Camera2D
 
     public override void _PhysicsProcess(float delta)
     {
-        if (_zoomTargetLevel != 1.0f)
-            Position = GetGlobalMousePosition();
-    }    
+        //if (_zoomTargetLevel != 1.0f)
+        //    Position = GetGlobalMousePosition();
+    }
 
 #endregion
 
@@ -105,17 +106,33 @@ public class CameraShake : Camera2D
     }
 
     /// <summary>
-    /// to zoom the camera
+    /// To zoom the camera
     /// </summary>
     /// <param name="pZoomValue">Zoom factor</param>
-    public void Zoom_Camera(float pZoomValue)
+    /// <param name="pZoomDuration">(optional - empty = ZoomDefaultZoomduration value) How fast the zoom occurs (small value = faster) </param>
+    public void Zoom_Camera(float pZoomValue, float pZoomDuration = -1.0f)
     {
-        // Limit the value between `min_zoom` and `max_zoom`
-        _zoomTargetLevel = Mathf.Clamp(pZoomValue, _minZoom, _maxZoom);
+        // Set zoom speed
+        _zoomDuration = pZoomDuration == -1.0f ? ZoomDefaultZoomduration : pZoomDuration;
+
+        // Limit the zoom value between `min_zoom` and `max_zoom`
+        _zoomTargetLevel = Mathf.Clamp(pZoomValue, ZoomMinValue, ZoomMaxValue);
 
         // Animate the zoom
         _tween.InterpolateProperty(this, "zoom", Zoom, new Vector2(_zoomTargetLevel, _zoomTargetLevel), _zoomDuration, Tween.TransitionType.Sine, Tween.EaseType.Out);
         _tween.Start();
+    }
+
+    /// <summary>
+    /// To zoom the camera
+    /// </summary>
+    /// <param name="pZoomValue">Zoom factor</param>
+    /// <param name="pZoomTargetPosition">The position where to place the camera during the zoom</param>
+    /// <param name="pZoomDuration">How fast the zoom occurs (small value = faster)(empty = ZoomDefaultZoomduration value) </param>
+    public void Zoom_Camera(float pZoomValue, Vector2 pZoomTargetPosition, float pZoomDuration = -1.0f)
+    {
+        Position = pZoomTargetPosition;
+        Zoom_Camera(pZoomValue, pZoomDuration);
     }
 
     /// <summary>

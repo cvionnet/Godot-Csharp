@@ -19,6 +19,9 @@ public class Spawn_Player : Node, IState
     // Called when the node enters the scene tree for the first time
     public override void _Ready()
     {
+        Initialize(Owner);
+        _player = (Player)Owner;
+
         Initialize_SpawnPlayer();
     }
 
@@ -102,9 +105,6 @@ public class Spawn_Player : Node, IState
 
     private void Initialize_SpawnPlayer()
     {
-        Initialize(Owner);
-        _player = (Player)Owner;
-
         _startPosition = _player.Position;
     }
 

@@ -7,8 +7,6 @@ public class Menu : Node
 
     [Signal] private delegate void Generic_TransitionScene(string nextScene);
 
-	//private StateManager _stateManager;
-
     private Button _buttonStart;
 
 #endregion
@@ -19,8 +17,6 @@ public class Menu : Node
 
     public override void _Ready()
     {
-		//_stateManager = GetNode<StateManager>("/root/StateManager");
-
         _buttonStart = GetNode<Button>("Button");
         _buttonStart.Connect("pressed",this , nameof(_onButtonStart_Pressed));
 
