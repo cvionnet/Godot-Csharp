@@ -1,7 +1,6 @@
 using Godot;
 using System;
 
-[Tool]
 public class SceneManager : Node
 {
 #region HEADER

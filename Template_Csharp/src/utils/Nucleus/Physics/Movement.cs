@@ -44,6 +44,18 @@ namespace Nucleus.Physics
         /// <summary>
         /// Calculate the velocity of a character
         /// </summary>
+        /// <param name="pCharacterProperties">a Character object with all properties</param>
+        /// <param name="delta">delta time</param>
+        /// <returns>A vector2 to represent the new velocity</returns>
+        public static Vector2 CalculateVelocity(CCharacter pCharacterProperties, float delta)
+        {
+            return CalculateVelocity(pCharacterProperties.Velocity, pCharacterProperties.MaxSpeed, pCharacterProperties.Acceleration, pCharacterProperties.Decceleration
+                                    , pCharacterProperties.Direction, delta, pCharacterProperties.MaxFall_Speed);
+        }
+
+        /// <summary>
+        /// Calculate the velocity of a character
+        /// </summary>
         /// <param name="pActualVelocity">the actual velocity of the character</param>
         /// <param name="pMax_Speed">to limit the new velocity</param>
         /// <param name="pAcceleration">the acceleration of the character</param>

@@ -39,8 +39,16 @@ public class Properties
 ///     In the _Ready() method :
 ///         _debugPanel = GetNode<Debug_Panel>("Debug_Panel");
 ///         _player = GetNode<Player>("Player");
+///
 ///         👉 adding a node property  ( Position )
 ///             _debugPanel.Add_Property(new Properties("Player position", _player, "position", false));
+///
+///             ℹ : for Godot properties, use camel case ("position" instead of "Position"). Not needed for user-defined properties
+///             ℹ : it doesn't work with nested values  (eg : position.x, MyClass.myValue)
+///                 solution : store the nested value in a temp value (updated in the _Process method)
+///                     private float _xPos;
+///                     _debugPanel.Add_Property(new Properties("X Position", _player, "_xPos", false));
+///                     public override void _Process(float delta) { _xPos = Position.x; }
 ///         👉 adding a script property  ( public float Speed { get; set; } )
 ///             _debugPanel.Add_Property(new Properties("Player speed", _player, "Speed", false));
 ///         👉 adding a script method result  ( public Vector2 Get_Velocity() { return _velocity; } )
@@ -51,6 +59,7 @@ public class Debug_Panel : Node2D
 {
 #region HEADER
 
+    [Export] private int FontSize = 16;
     [Export] private bool FPS = true;
     [Export] private bool Drawcalls = true;
     [Export] private bool Process = true;
@@ -92,15 +101,32 @@ public class Debug_Panel : Node2D
         _nodes = GetNode<Label>("CanvasLayer/VBoxContainer/Nodes");
         _drawcalls = GetNode<Label>("CanvasLayer/VBoxContainer/Drawcalls");
 
-        // Hide options not selected in the Inspector's properties
-        if (!FPS) _fps.Visible = false;
-        if (!Process) _process.Visible = false;
-        if (!Physics_Process) _physicsProcess.Visible = false;
-        if (!Mem) _mem.Visible = false;
-        if (!Objects) _objects.Visible = false;
-        if (!Resources) _resources.Visible = false;
-        if (!Nodes) _nodes.Visible = false;
-        if (!Drawcalls) _drawcalls.Visible = false;
+        // Create dynamic font to set the size
+        DynamicFont dynamic_font = new DynamicFont
+        {
+            FontData = new DynamicFontData { FontPath = "res://src/utils/debug_panel/Flexi_IBM_VGA_True.ttf" },
+            Size = FontSize
+        };
+
+        _properties.Set("custom_fonts/font", dynamic_font);
+        _fps.Set("custom_fonts/font", dynamic_font);
+        _process.Set("custom_fonts/font", dynamic_font);
+        _physicsProcess.Set("custom_fonts/font", dynamic_font);
+        _mem.Set("custom_fonts/font", dynamic_font);
+        _objects.Set("custom_fonts/font", dynamic_font);
+        _resources.Set("custom_fonts/font", dynamic_font);
+        _nodes.Set("custom_fonts/font", dynamic_font);
+        _drawcalls.Set("custom_fonts/font", dynamic_font);
+
+        // Unload options not selected in the Inspector's properties
+        if (!FPS) _fps.CallDeferred("queue_free");
+        if (!Process) _process.CallDeferred("queue_free");
+        if (!Physics_Process) _physicsProcess.CallDeferred("queue_free");
+        if (!Mem) _mem.CallDeferred("queue_free");
+        if (!Objects) _objects.CallDeferred("queue_free");
+        if (!Resources) _resources.CallDeferred("queue_free");
+        if (!Nodes) _nodes.CallDeferred("queue_free");
+        if (!Drawcalls) _drawcalls.CallDeferred("queue_free");
     }
 
     public override void _Process(float delta)

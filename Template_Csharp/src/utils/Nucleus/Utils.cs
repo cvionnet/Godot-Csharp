@@ -23,7 +23,6 @@ namespace Nucleus
         public static Vector2 VECTOR_FLOOR { get; } = new Vector2(0,-1);          // (=Vector2.UP in GDScript) Use it for plateformer
 
         // References to state machines & StateManager
-        public static StateMachine_Template StateMachine_Template { get; set; }
         public static StateManager State_Manager { get; set; }
 
         private static string _gameShortName;

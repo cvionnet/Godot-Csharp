@@ -14,6 +14,19 @@ namespace Nucleus.Physics
         /// <summary>
         /// Calculate a velocity to move a character towards a destination (Follow)
         /// </summary>
+        /// <param name="pCharacterProperties">a Character object with all properties</param>
+        /// <param name="pPosition">the actual global position of the character</param>
+        /// <param name="pStopRadius">the circle radius around the target where the character stops</param>
+        /// <returns>A vector2 to represent the destination velocity or a Vector2(0,0) if character is close to the target</returns>
+        public static Vector2 Steering_Seek(CCharacter pCharacterProperties, Vector2 pPosition, float pStopRadius = STEERING_CLOSE_DISTANCE)
+        {
+            return Steering_Seek(pCharacterProperties.Velocity, pPosition, pCharacterProperties.Steering.TargetGlobalPosition, pCharacterProperties.Steering.Speed,
+                            pCharacterProperties.Steering.Slow_Radius, pCharacterProperties.Steering.Mass, pStopRadius);
+        }
+
+        /// <summary>
+        /// Calculate a velocity to move a character towards a destination (Follow)
+        /// </summary>
         /// <param name="pVelocity">the actual velocity of the character</param>
         /// <param name="pPosition">the actual global position of the character</param>
         /// <param name="pTargetPosition">the destination of the character</param>
