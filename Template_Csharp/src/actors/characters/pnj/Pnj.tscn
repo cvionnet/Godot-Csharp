@@ -1,0 +1,151 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://src/actors/characters/pnj/Pnj.cs" type="Script" id=1]
+[ext_resource path="res://src/actors/characters/pnj/states/StateMachine_Pnj.cs" type="Script" id=3]
+[ext_resource path="res://src/actors/characters/pnj/states/Spawn_Pnj.cs" type="Script" id=4]
+[ext_resource path="res://src/actors/characters/pnj/states/Idle_Pnj.cs" type="Script" id=5]
+[ext_resource path="res://src/actors/characters/pnj/states/Move_Pnj.cs" type="Script" id=6]
+[ext_resource path="res://src/actors/characters/pnj/states/Fall_Pnj.cs" type="Script" id=7]
+[ext_resource path="res://src/actors/characters/CharacterTimers.tscn" type="PackedScene" id=8]
+
+[sub_resource type="CapsuleShape2D" id=4]
+radius = 21.5843
+height = 7.42484
+
+[sub_resource type="Animation" id=5]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("CharacterSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CharacterSprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "idle"
+length = 0.8
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("CharacterSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "run"
+length = 1.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("CharacterSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 12, 13, 14, 15, 16, 17 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CharacterSprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2, 0.5, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, -6 ), Vector2( 0, 0 ), Vector2( 0, -6 ) ]
+}
+
+[sub_resource type="StreamTexture" id=8]
+load_path = "res://.import/zombie1.png-585b4d07d920fb52c5b12747c4f798cc.stex"
+
+[node name="Pnj" type="KinematicBody2D"]
+collision_layer = 2
+collision_mask = 7
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 3.17839 )
+shape = SubResource( 4 )
+
+[node name="DebugLabel" type="Label" parent="."]
+margin_left = -30.0
+margin_top = -38.0
+margin_right = 30.0
+margin_bottom = -24.0
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "Debug"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DebugLabel2" type="Label" parent="."]
+margin_left = -29.7292
+margin_top = -20.3968
+margin_right = 30.2708
+margin_bottom = -6.39682
+custom_colors/font_color = Color( 1, 0, 0, 1 )
+text = "Debug"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CharacterTimers" parent="." instance=ExtResource( 8 )]
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 3 )
+InitialStateNode = NodePath("Spawn")
+
+[node name="Spawn" type="Node" parent="StateMachine"]
+script = ExtResource( 4 )
+
+[node name="Fall" type="Node" parent="StateMachine"]
+script = ExtResource( 7 )
+
+[node name="Move" type="Node" parent="StateMachine"]
+script = ExtResource( 6 )
+
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource( 5 )
+
+[node name="CharacterAnimation" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 5 )
+anims/idle = SubResource( 6 )
+anims/run = SubResource( 7 )
+
+[node name="CharacterSprite" type="Sprite" parent="."]
+scale = Vector2( 2, 2 )
+texture = SubResource( 8 )
+hframes = 6
+vframes = 7

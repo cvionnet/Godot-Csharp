@@ -2,6 +2,10 @@ using Godot;
 using Nucleus;
 using System;
 
+/// <summary>
+/// Responsible for :
+/// - dealing with exit game actions
+/// </summary>
 public class Main : Node
 {
 #region HEADER
@@ -12,21 +16,20 @@ public class Main : Node
 
 #region GODOT METHODS
 
-    public override void _Ready()
-    {
-        Initialize_Main();
-    }
+	public override void _Ready()
+	{
+		Initialize_Main();
+	}
 
-    public override void _Notification(int what)
-    {
-        // When exit the game
-        if (what == MainLoop.NotificationWmQuitRequest)
-        {
-            Nucleus_Utils.Finalize_Utils();
-
-            GetTree().Quit(); // default behavior
-        }
-    }
+	public override void _Notification(int what)
+	{
+		// When exit the game
+		if (what == MainLoop.NotificationWmQuitRequest)
+		{
+			Nucleus_Utils.Finalize_Utils();
+			GetTree().Quit(); // default behavior
+		}
+	}
 
 #endregion
 
@@ -40,11 +43,8 @@ public class Main : Node
 
 #region USER METHODS
 
-    private void Initialize_Main()
-    {
-        Nucleus_Utils.Initialize_Utils(GetViewport());
-        Nucleus_Utils.State_Manager = GetNode<StateManager>("/root/StateManager");
-    }
+	private void Initialize_Main()
+	{ }
 
 #endregion
 }

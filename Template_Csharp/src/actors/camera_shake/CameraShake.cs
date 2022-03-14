@@ -52,10 +52,7 @@ public class CameraShake : Camera2D
     public override void _Process(float delta)
     {
         if(_isShaking)
-        {
             _Shake(delta);
-            Offset = Nucleus_Utils.VECTOR_0;
-        }
     }
 
     public override void _PhysicsProcess(float delta)
@@ -80,6 +77,7 @@ public class CameraShake : Camera2D
     private void _ShakeLength_Timeout()
     {
         _isShaking = false;
+        Offset = Nucleus_Utils.VECTOR_0;    // reset the camera position
     }
 
 #endregion

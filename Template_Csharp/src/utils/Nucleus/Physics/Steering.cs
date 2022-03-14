@@ -20,7 +20,10 @@ namespace Nucleus.Physics
         /// <returns>A vector2 to represent the destination velocity or a Vector2(0,0) if character is close to the target</returns>
         public static Vector2 Steering_Seek(CCharacter pCharacterProperties, Vector2 pPosition, float pStopRadius = STEERING_CLOSE_DISTANCE)
         {
-            return Steering_Seek(pCharacterProperties.Velocity, pPosition, pCharacterProperties.Steering.TargetGlobalPosition, pCharacterProperties.Steering.Speed,
+//            return Steering_Seek(pCharacterProperties.Velocity, pPosition, pCharacterProperties.Steering.TargetGlobalPosition, pCharacterProperties.Steering.Speed,
+//                            pCharacterProperties.Steering.Slow_Radius, pCharacterProperties.Steering.Mass, pStopRadius);
+
+            return Steering_Seek(pCharacterProperties.Velocity, pPosition, pCharacterProperties.Steering.TargetGlobalPosition, pCharacterProperties.MaxSpeed.x,
                             pCharacterProperties.Steering.Slow_Radius, pCharacterProperties.Steering.Mass, pStopRadius);
         }
 

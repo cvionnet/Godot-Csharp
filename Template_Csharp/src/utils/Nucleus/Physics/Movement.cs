@@ -1,3 +1,4 @@
+using System;
 using Godot;
 
 namespace Nucleus.Physics
@@ -49,8 +50,11 @@ namespace Nucleus.Physics
         /// <returns>A vector2 to represent the new velocity</returns>
         public static Vector2 CalculateVelocity(CCharacter pCharacterProperties, float delta)
         {
-            return CalculateVelocity(pCharacterProperties.Velocity, pCharacterProperties.MaxSpeed, pCharacterProperties.Acceleration, pCharacterProperties.Decceleration
-                                    , pCharacterProperties.Direction, delta, pCharacterProperties.MaxFall_Speed);
+            // Formula in CalculateVelocity() use the value of MaxFall_Speed to limit y axis upper speed (with Mathf.Clamp). If topdown game, set this value to MaxSpeed.y
+            float maxspeed = pCharacterProperties.IsPlateformer ? pCharacterProperties.MaxFall_Speed : pCharacterProperties.MaxSpeed.y;
+
+            return CalculateVelocity(pCharacterProperties.Velocity, pCharacterProperties.MaxSpeed, pCharacterProperties.Acceleration, pCharacterProperties.Deceleration
+                                    , pCharacterProperties.Direction, delta, maxspeed);
         }
 
         /// <summary>

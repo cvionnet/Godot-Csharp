@@ -1,10 +1,13 @@
 using Godot;
+using Nucleus;
 
+/// <summary>
+/// Responsible for :
+/// - playing a fadein/out animation (emit a signal when finished)
+/// </summary>
 public class SceneTransition : Node
 {
 #region HEADER
-
-    [Signal] private delegate void SceneTransition_AnimationFinished();
 
     private AnimationPlayer _animation;
 
@@ -31,7 +34,7 @@ public class SceneTransition : Node
         if (anim_name == "fadeToBlack")
         {
             // (send to SceneManager)
-            EmitSignal(nameof(SceneTransition_AnimationFinished));
+            Nucleus_Utils.State_Manager.EmitSignal("SceneTransition_AnimationFinished");
             _animation.Play("fadeToNormal");
         }
     }
@@ -46,9 +49,7 @@ public class SceneTransition : Node
     /// To activate the fade to black transition
     /// </summary>
     public void Transition_Scene()
-    {
-        _animation.Play("fadeToBlack");
-    }
+        => _animation.Play("fadeToBlack");
 
 #endregion
 }

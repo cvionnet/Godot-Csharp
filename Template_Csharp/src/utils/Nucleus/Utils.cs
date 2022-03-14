@@ -22,8 +22,8 @@ namespace Nucleus
         public static Vector2 VECTOR_INF { get; } = new Vector2(1.0f/_zero,1.0f/_zero);    // infinite vector  (=Vector2.INF in GDScript)
         public static Vector2 VECTOR_FLOOR { get; } = new Vector2(0,-1);          // (=Vector2.UP in GDScript) Use it for plateformer
 
-        // References to state machines & StateManager
-        public static StateManager State_Manager { get; set; }
+        // References to StateManager
+        public static StateManager State_Manager { get; set; } = new StateManager();
 
         private static string _gameShortName;
         private static string _uniqueId;

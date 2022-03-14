@@ -1,7 +1,9 @@
+using System;
 using Godot;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nucleus;
+using System.Reflection;
 
 /// <summary>
 /// A class to spawn new instance of a scene
@@ -58,9 +60,16 @@ public class Spawn_Factory : Position2D
         {
             try
             {
-                PackedScene scene = (PackedScene)ResourceLoader.Load(pPath);
-                ListScenes.Add(scene);
-                return true;
+                PackedScene scene = ResourceLoader.Load(pPath) as PackedScene;
+                if (scene != null)
+                {
+                    ListScenes.Add(scene);
+                    return true;
+                }
+                else
+                {
+                    throw new System.NullReferenceException();
+                }
             }
             catch (System.Exception ex)
             {
@@ -106,7 +115,7 @@ public class Spawn_Factory : Position2D
         }
         else
         {
-            GD.Print("TODO: ERROR - Class " + scene.Instance().GetType() + " is not defined in 'Add_Instance'");
+            Nucleus_Utils.Error($"TODO: ERROR - Class {scene.Instance().GetType()} is not defined in 'Add_Instance'", new NullReferenceException(), GetType().Name, MethodBase.GetCurrentMethod().Name);
             instance = null;
         }
 
@@ -153,77 +162,23 @@ public class Spawn_Factory : Position2D
 
         // Create the instance
         T instance = null;
-        int scene_id = 0;
+        int sceneId = 0;
 
         // For instances to create
         for (int i = 0; i < pSpawnNumber; i++)
         {
             // Create the delayed instance
-            instance = await Add_Instance_With_Delay<T>(pDestinationNode_Deferred, pGlobalPosition, pTiming, scene_id, pGroupName);
+            instance = await Add_Instance_With_Delay<T>(pDestinationNode_Deferred, pGlobalPosition, pTiming, sceneId, pGroupName);
 
             // Select a random scene if needed or load the next scene in the list
             if (pRandomInstance && ListScenes.Count > 1)
-                scene_id = Nucleus_Maths.Rnd.RandiRange(0, ListScenes.Count-1);
+                sceneId = Nucleus_Maths.Rnd.RandiRange(0, ListScenes.Count-1);
             else if (ListScenes.Count > 1)
-                scene_id = (scene_id < ListScenes.Count-1) ? scene_id+1 : 0;
+                sceneId = (sceneId < ListScenes.Count-1) ? sceneId+1 : 0;
         }
 
         return instance;
     }
 
 #endregion
-}
-
-//*-------------------------------------------------------------------------*//
-//*-------------------------------------------------------------------------*//
-
-/// <summary>
-/// A class to define timing options to apply to spawn an instance
-/// </summary>
-public class Spawn_Timing
-{
-    public bool IsTimed { get; private set; }
-    public bool IsRandomTime { get; private set; }
-    public bool IsRandomTimePerSpawn { get; private set; }
-    public float MinTime { get; private set; }
-    public float MaxTime { get; private set; }
-
-    /// <summary>
-    /// Constructor (empty constructor : timing options are disabled)
-    /// </summary>
-    /// <param name="pIsTimed">Set to true to create a Spawn_Timing</param>
-    /// <param name="pIsRandomTime">Use a random spawn timing ?</param>
-    /// <param name="pIsRandomTimePerSpawn">Set a random spawn timing on each instance ?</param>
-    /// <param name="pMinTime">Minimum time to wait before creating a new instance</param>
-    /// <param name="pMaxTime">Maximum time to wait before creating a new instance (used if pIsRandomTime or pIsRandomTimePerSpawn=true)</param>
-    public Spawn_Timing(bool pIsTimed=false, bool pIsRandomTime=false, bool pIsRandomTimePerSpawn=false, float pMinTime=0.0f, float pMaxTime=1.0f)
-    {
-        IsTimed = pIsTimed;
-        IsRandomTime = pIsRandomTime;
-        IsRandomTimePerSpawn = pIsRandomTimePerSpawn;
-        MinTime = pMinTime;
-        MaxTime = pMaxTime;
-    }
-
-    /// <summary>
-    /// Return the amount of time to wait
-    ///     - if IsTimed = false                        => return 0.0f
-    ///     - if IsTimed = true                         => return MinTime
-    ///     - if IsTimed = true and IsRandomTime = true => return a random value between MinTime and MaxTime
-    /// </summary>
-    /// <returns>A float to represent the amount of time</returns>
-    public float GetTiming()
-    {
-        float spawn_time = 0.0f;
-
-        if(IsTimed)
-        {
-            spawn_time = MinTime;
-
-            if (IsRandomTime)
-                spawn_time = Nucleus_Maths.Rnd.RandfRange(MinTime, MaxTime);
-        }
-
-        return spawn_time;
-    }
 }

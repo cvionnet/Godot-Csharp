@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://src/actors/items/ItemsBrain.cs" type="Script" id=1]
+[ext_resource path="res://src/utils/spawn_factory/Spawn_Factory.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/actors/items/ItemGeneric.tscn" type="PackedScene" id=3]
+
+[node name="ItemsBrain" type="Node2D"]
+script = ExtResource( 1 )
+ItemGenericScene = ExtResource( 3 )
+MinTimerNewItem = 1.0
+MaxTimerNewItem = 3.0
+
+[node name="Spawn_Items" parent="." instance=ExtResource( 2 )]
+
+[node name="TimerNewItem" type="Timer" parent="."]
+one_shot = true

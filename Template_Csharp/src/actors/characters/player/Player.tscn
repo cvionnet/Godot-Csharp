@@ -1,0 +1,144 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://src/actors/camera_shake/CameraShake.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/actors/characters/player/StateMachine_Player.cs" type="Script" id=3]
+[ext_resource path="res://assets/actors/characters/player.png" type="Texture" id=4]
+[ext_resource path="res://src/actors/characters/player/states/Spawn_Player.cs" type="Script" id=5]
+[ext_resource path="res://src/actors/characters/player/Player.cs" type="Script" id=6]
+[ext_resource path="res://src/actors/characters/player/states/Move_Player.cs" type="Script" id=7]
+[ext_resource path="res://src/actors/characters/player/states/Idle_Player.cs" type="Script" id=8]
+[ext_resource path="res://src/utils/debug_panel/Debug_Panel.tscn" type="PackedScene" id=9]
+[ext_resource path="res://src/actors/characters/player/states/Dash_Player.cs" type="Script" id=10]
+[ext_resource path="res://src/actors/characters/player/states/Fall_Player.cs" type="Script" id=11]
+[ext_resource path="res://src/ui/UI_Player.tscn" type="PackedScene" id=12]
+[ext_resource path="res://src/actors/characters/CharacterTimers.tscn" type="PackedScene" id=13]
+
+[sub_resource type="CapsuleShape2D" id=3]
+radius = 20.9723
+height = 9.70134
+
+[sub_resource type="Animation" id=7]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("CharacterSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CharacterSprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+length = 0.8
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("CharacterSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+
+[sub_resource type="Animation" id=6]
+length = 1.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("CharacterSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 24, 25, 26, 27, 28, 29 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CharacterSprite:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2, 0.5, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, -6 ), Vector2( 0, 0 ), Vector2( 0, -6 ) ]
+}
+
+[node name="Player" type="KinematicBody2D"]
+collision_mask = 7
+script = ExtResource( 6 )
+
+[node name="Debug_Panel" parent="." instance=ExtResource( 9 )]
+FontSize = 26
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 3.11814 )
+shape = SubResource( 3 )
+
+[node name="CameraShake" parent="." instance=ExtResource( 2 )]
+position = Vector2( 8, 53.3273 )
+limit_left = -100
+limit_top = -100
+limit_right = 2020
+limit_bottom = 1180
+limit_smoothed = true
+
+[node name="CharacterTimers" parent="." instance=ExtResource( 13 )]
+
+[node name="UI" type="Node" parent="."]
+
+[node name="UI_Player" parent="UI" instance=ExtResource( 12 )]
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 3 )
+InitialStateNode = NodePath("Spawn")
+
+[node name="Spawn" type="Node" parent="StateMachine"]
+script = ExtResource( 5 )
+
+[node name="Fall" type="Node" parent="StateMachine"]
+script = ExtResource( 11 )
+
+[node name="Move" type="Node" parent="StateMachine"]
+script = ExtResource( 7 )
+
+[node name="Idle" type="Node" parent="StateMachine/Move"]
+script = ExtResource( 8 )
+
+[node name="Dash" type="Node" parent="StateMachine/Move"]
+script = ExtResource( 10 )
+
+[node name="CharacterAnimation" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 7 )
+anims/idle = SubResource( 5 )
+anims/run = SubResource( 6 )
+
+[node name="CharacterSprite" type="Sprite" parent="."]
+scale = Vector2( 2, 2 )
+texture = ExtResource( 4 )
+hframes = 6
+vframes = 15

@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://src/utils/spawn_factory/Spawn_Factory.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/actors/characters/CharactersBrain.cs" type="Script" id=2]
+
+[node name="CharactersBrain" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="Spawn_Pnj" parent="." instance=ExtResource( 1 )]
+position = Vector2( 1, 0 )
+
+[node name="Spawn_Player" parent="." instance=ExtResource( 1 )]
