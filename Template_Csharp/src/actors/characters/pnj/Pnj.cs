@@ -28,6 +28,7 @@ public class Pnj : KinematicBody2D
 
     private readonly float _minTimerNewDestination = 5.0f;
     private readonly float _maxTimerNewDestination = 10.0f;
+    private readonly float _radiusMovement = 100.0f;
 
 #endregion
 
@@ -114,9 +115,9 @@ public class Pnj : KinematicBody2D
         CharacterProperties.IsControlledByPlayer = false;
 
         CharacterProperties.Steering.LeaderToFollow = this;     // Steering AI - Set the player node as leader
-        CharacterProperties.MaxSpeed = new Vector2(Nucleus_Maths.Rnd.RandfRange(300.0f, 500.0f), Nucleus_Maths.Rnd.RandfRange(300.0f, 500.0f));
-        CharacterProperties.Steering.TargetGlobalPosition = GlobalPosition;
-//        CharacterProperties.Steering.Speed = CharacterProperties.MaxSpeed.x;
+        CharacterProperties.MaxSpeed = new Vector2(Nucleus_Maths.Rnd.RandfRange(30.0f, 50.0f), Nucleus_Maths.Rnd.RandfRange(30.0f, 50.0f));
+        //CharacterProperties.Steering.TargetGlobalPosition = GlobalPosition;
+        //CharacterProperties.Steering.Speed = CharacterProperties.MaxSpeed.x;
     }
 
     /// <summary>
@@ -124,11 +125,12 @@ public class Pnj : KinematicBody2D
     /// </summary>
     private void Set_NewDestination()
     {
-        // TODO: use "pPlatformProperties.PlatformNextGroupToOpen" to not send the player on the next open platform
-
-        // Move the player to another place
-        CharacterProperties.Steering.TargetGlobalPosition = new Vector2(Nucleus_Maths.Rnd.RandfRange(10.0f, Nucleus_Utils.ScreenWidth-10.0f), Nucleus_Maths.Rnd.RandfRange(10.0f, Nucleus_Utils.ScreenHeight-10.0f));
-        if (CharacterProperties.DebugMode) DebugLabel2.Text = Mathf.Floor(CharacterProperties.Steering.TargetGlobalPosition.x) + "/" + Mathf.Floor(CharacterProperties.Steering.TargetGlobalPosition.y);
+        // Move the character to another place around him
+        CharacterProperties.Steering.Set_TargetGlobalPosition(GlobalPosition, 10.0f, 
+                                                    Nucleus_Utils.ScreenWidth-10.0f, 10.0f, Nucleus_Utils.ScreenHeight-10.0f, _radiusMovement);
+        
+        if (CharacterProperties.DebugMode) 
+            DebugLabel2.Text = Mathf.Floor(CharacterProperties.Steering.TargetGlobalPosition.x) + "/" + Mathf.Floor(CharacterProperties.Steering.TargetGlobalPosition.y);
 
         StateMachine.TransitionTo("Move");
     }

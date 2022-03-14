@@ -10,6 +10,29 @@ namespace Nucleus.AI
         private const float STEERING_DEFAULT_FLEE = 200.0f;      // to run away
 
         /// <summary>
+        /// Set the next position where the agent have to go
+        /// </summary>
+        /// <param name="currentPosition">The current position of the agent</param>
+        /// <param name="minBorderX">Destination cannot be below this value</param>
+        /// <param name="maxBorderX">Destination cannot be above this value</param>
+        /// <param name="minBorderY">Destination cannot be below this value</param>
+        /// <param name="maxBorderY">Destination cannot be above this value</param>
+        /// <param name="radiusMovement">The max radius the agent can move</param>
+        public void Set_TargetGlobalPosition(Vector2 currentPosition, float minBorderX, float maxBorderX, float minBorderY, float maxBorderY, float radiusMovement = 0.0f)
+        {
+            Vector2 rdnPosition;
+            
+            if (radiusMovement != 0.0f)
+                rdnPosition = new Vector2( Mathf.Clamp(currentPosition.x + Nucleus_Maths.Rndf_AvoidZero(-radiusMovement, radiusMovement), minBorderX, maxBorderX),
+                                            Mathf.Clamp(currentPosition.y + Nucleus_Maths.Rndf_AvoidZero(-radiusMovement, radiusMovement), minBorderY, maxBorderY));
+            else
+                rdnPosition = new Vector2( Nucleus_Maths.Rnd.RandfRange(minBorderX, maxBorderX),Nucleus_Maths.Rnd.RandfRange(minBorderY, maxBorderY));
+            
+            TargetGlobalPosition = rdnPosition;
+        }
+        
+        
+        /// <summary>
         /// Calculate a velocity to move a character towards a destination (Follow)
         /// </summary>
         /// <param name="pCharacterProperties">a Character object with all properties</param>
