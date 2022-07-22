@@ -1,8 +1,0 @@
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.1-Steering Behaviors\.mono\temp\obj\Debug\02.1-Steering Behaviors.csprojAssemblyReference.cache
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.1-Steering Behaviors\.mono\temp\obj\Debug\02.1-Steering Behaviors.AssemblyInfoInputs.cache
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.1-Steering Behaviors\.mono\temp\obj\Debug\02.1-Steering Behaviors.AssemblyInfo.cs
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.1-Steering Behaviors\.mono\temp\obj\Debug\02.1-Steering Behaviors.csproj.CoreCompileInputs.cache
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.1-Steering Behaviors\.mono\temp\bin\Debug\02.1-Steering Behaviors.dll
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.1-Steering Behaviors\.mono\temp\bin\Debug\02.1-Steering Behaviors.pdb
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.1-Steering Behaviors\.mono\temp\obj\Debug\02.1-Steering Behaviors.dll
-C:\Mega\MEGAsync\Dev\Games\Godot\Github\Godot-Csharp\GDQuest\02.1-Steering Behaviors\.mono\temp\obj\Debug\02.1-Steering Behaviors.pdb

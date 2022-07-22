@@ -1,8 +1,0 @@
-C:\Mega\MEGAsync\Dev\Games\Godot\Tutos\GDQuest\01-2D platformer\.mono\temp\bin\Debug\01-2D platformer.dll
-C:\Mega\MEGAsync\Dev\Games\Godot\Tutos\GDQuest\01-2D platformer\.mono\temp\bin\Debug\01-2D platformer.pdb
-C:\Mega\MEGAsync\Dev\Games\Godot\Tutos\GDQuest\01-2D platformer\.mono\temp\obj\Debug\01-2D platformer.csprojAssemblyReference.cache
-C:\Mega\MEGAsync\Dev\Games\Godot\Tutos\GDQuest\01-2D platformer\.mono\temp\obj\Debug\01-2D platformer.AssemblyInfoInputs.cache
-C:\Mega\MEGAsync\Dev\Games\Godot\Tutos\GDQuest\01-2D platformer\.mono\temp\obj\Debug\01-2D platformer.AssemblyInfo.cs
-C:\Mega\MEGAsync\Dev\Games\Godot\Tutos\GDQuest\01-2D platformer\.mono\temp\obj\Debug\01-2D platformer.csproj.CoreCompileInputs.cache
-C:\Mega\MEGAsync\Dev\Games\Godot\Tutos\GDQuest\01-2D platformer\.mono\temp\obj\Debug\01-2D platformer.dll
-C:\Mega\MEGAsync\Dev\Games\Godot\Tutos\GDQuest\01-2D platformer\.mono\temp\obj\Debug\01-2D platformer.pdb
